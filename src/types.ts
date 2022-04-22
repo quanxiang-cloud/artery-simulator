@@ -1,4 +1,6 @@
+import { HTMLNode, ReactComponentNode } from '@one-for-all/artery';
 import type { Rect, ElementRect } from '@one-for-all/elements-radar';
+import { ComponentClass, FunctionComponent } from 'react';
 
 export interface VisibleNode extends ElementRect {
   id: string;
@@ -34,3 +36,9 @@ export interface GreenZone {
   position: Position;
   mostInnerNode: ShadowNode;
 }
+
+export type NodeWithoutChild =
+  | Pick<HTMLNode, 'type' | 'name'>
+  | Pick<ReactComponentNode, 'type' | 'packageName' | 'packageVersion' | 'exportName'>;
+
+export type EmptyChildPlaceholder = FunctionComponent<any> | ComponentClass<any, any>;

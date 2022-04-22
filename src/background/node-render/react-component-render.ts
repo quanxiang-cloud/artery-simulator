@@ -3,6 +3,7 @@ import { useNodeComponent, CTX, ReactComponentNode } from '@one-for-all/artery-r
 
 import ChildrenRender from './children-render';
 import useComponentNodeProps from './hooks/use-component-props';
+import Placeholder from './placeholder';
 
 interface Props {
   node: ReactComponentNode;
@@ -17,7 +18,11 @@ function ReactComponentNodeRender({ node, ctx }: Props): React.ReactElement | nu
   }
 
   if (!node.children || !node.children.length) {
-    return React.createElement('div', wrapperProps, React.createElement(nodeComponent, nodeProps));
+    return React.createElement(
+      'div',
+      wrapperProps,
+      React.createElement(nodeComponent, nodeProps, Placeholder),
+    );
   }
 
   return React.createElement(

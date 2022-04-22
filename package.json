@@ -5,7 +5,9 @@
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "files": ["lib/index.d.ts"],
+  "files": [
+    "lib/index.d.ts"
+  ],
   "scripts": {
     "build": "tsc",
     "bundle": "rm -rf dist && rollup -c rollup.config.js",

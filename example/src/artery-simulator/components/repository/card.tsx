@@ -6,10 +6,8 @@ const style: React.CSSProperties = {
   width: '200px',
   border: '1px solid grey',
   margin: '8px',
-}
+};
 
 export default function Card(): JSX.Element {
-  return (
-    <div style={style}>simply card</div>
-  )
+  return <div style={style}>simply card</div>;
 }

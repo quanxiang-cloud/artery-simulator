@@ -17,7 +17,7 @@ const repository: Repository = {
     WillReturnNull,
     willReturnDifferentDom,
     Card,
-  }
-}
+  },
+};
 
 export default repository;

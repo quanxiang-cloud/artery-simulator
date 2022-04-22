@@ -5,6 +5,7 @@ import type { CTX, HTMLNode } from '@one-for-all/artery-renderer';
 import ChildrenRender from './children-render';
 import PathContext from './path-context';
 import useHTMLNodeProps from './hooks/use-html-node-props';
+import Placeholder from './placeholder';
 
 interface Props {
   node: HTMLNode;
@@ -24,7 +25,7 @@ function HTMLNodeRender({ node, ctx }: Props): React.ReactElement | null {
   }
 
   if (!node.children || !node.children.length) {
-    return React.createElement(node.name, props);
+    return React.createElement(node.name, props, React.createElement(Placeholder, { parent: node }));
   }
 
   return React.createElement(

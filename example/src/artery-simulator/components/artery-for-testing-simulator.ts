@@ -11,7 +11,12 @@ const arteryForTestingSimulator: Artery = {
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'Normal'
+        exportName: 'Normal',
+      },
+      {
+        id: 'a-dev',
+        type: 'html-element',
+        name: 'div',
       },
       {
         id: 'cards-wrapper',
@@ -20,8 +25,8 @@ const arteryForTestingSimulator: Artery = {
         props: {
           style: {
             type: 'constant_property',
-            value: { padding: '20px' }
-          }
+            value: { padding: '20px' },
+          },
         },
         children: [
           {
@@ -29,125 +34,124 @@ const arteryForTestingSimulator: Artery = {
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-2',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-3',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-4',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-5',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-6',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-7',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-8',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-9',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
           {
             id: 'card-10',
             type: 'react-component',
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
-            exportName: 'Card'
+            exportName: 'Card',
           },
-        ]
+        ],
       },
       {
         id: 'return-dom-list-component',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'ReturnDomList'
+        exportName: 'ReturnDomList',
       },
       {
         id: 'return-null-component',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'ReturnNull'
+        exportName: 'ReturnNull',
       },
       {
         id: 'will-return-dom-component',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'WillReturnDom'
+        exportName: 'WillReturnDom',
       },
       {
         id: 'will-return-null-component',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'WillReturnNull'
+        exportName: 'WillReturnNull',
       },
       {
         id: 'will-return-different-dom-component',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'willReturnDifferentDom'
+        exportName: 'willReturnDifferentDom',
       },
       {
         id: 'normal-component-bottom',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'Normal'
+        exportName: 'Normal',
       },
       {
         id: 'normal-component-bottom-1',
         type: 'react-component',
         packageName: 'SimulatorDedicated',
         packageVersion: 'whatever',
-        exportName: 'Normal'
+        exportName: 'Normal',
       },
-    ]
-  }
-
+    ],
+  },
 };
 
 export default arteryForTestingSimulator;

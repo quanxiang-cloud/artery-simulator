@@ -20,7 +20,10 @@ function Foreground({ report, onScroll, setActiveID }: Props): JSX.Element {
 
   return (
     <div className="simulator-foreground" onScroll={debounce(handleScroll)}>
-      <div className="foreground-scroll" style={{ height: `${report.areaHeight}px`, width: `${report.areaWidth}px` }} />
+      <div
+        className="foreground-scroll"
+        style={{ height: `${report.areaHeight}px`, width: `${report.areaWidth}px` }}
+      />
       <ShadowNodes nodes={report.visibleNodes} setActiveID={setActiveID} />
     </div>
   );

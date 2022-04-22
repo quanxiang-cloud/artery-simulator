@@ -2,7 +2,7 @@ import React from 'react';
 
 const style: React.CSSProperties = {
   height: '20px',
-}
+};
 
 export default function ReturnDomList(): JSX.Element {
   return (

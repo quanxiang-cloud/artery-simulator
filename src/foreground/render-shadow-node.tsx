@@ -13,9 +13,7 @@ function preventDefault(e: any): false {
   return false;
 }
 
-function handleMove(nodeID: string, targetID: string, position: Position): void {
-
-}
+function handleMove(nodeID: string, targetID: string, position: Position): void {}
 
 interface Props {
   shadowNode: ShadowNode;
@@ -29,8 +27,8 @@ function RenderShadowNode({
   onClick,
   isActive,
   className,
-  // onDrop,
-}: Props): JSX.Element {
+}: // onDrop,
+Props): JSX.Element {
   const { id } = shadowNode;
   const { rootNodeID } = useContext(ArteryCtx);
   const style = useShadowNodeStyle(shadowNode);

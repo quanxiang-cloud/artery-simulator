@@ -50,7 +50,7 @@ const rootSchema: Artery = {
               },
             ],
           },
-        ]
+        ],
       },
       {
         id: 'route-for-simulator',
@@ -61,9 +61,9 @@ const rootSchema: Artery = {
           type: 'ref-node',
           arteryID: 'SCHEMA_ID_SIMULATOR',
         },
-      }
-    ]
-  }
+      },
+    ],
+  },
 };
 
 export default rootSchema;

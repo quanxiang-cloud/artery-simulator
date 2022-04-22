@@ -11,10 +11,7 @@ import simulatorArtery from './artery-simulator/main-artery';
 import simulatorRepo from './artery-simulator/repository';
 
 const apiSpecAdapter = new SwaggerSpecAdapter(apiDoc);
-const repository: Repository = Object.assign(
-  {},
-  simulatorRepo,
-);
+const repository: Repository = Object.assign({}, simulatorRepo);
 
 const schemaDB: Record<string, Artery> = {
   SCHEMA_ID_SIMULATOR: simulatorArtery,

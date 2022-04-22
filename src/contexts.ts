@@ -1,6 +1,6 @@
 import React from 'react';
 import { Artery, Node } from '@one-for-all/artery';
-import { GreenZone } from './types';
+import { EmptyChildPlaceholder, GreenZone, NodeWithoutChild } from './types';
 
 interface ArteryContext {
   artery: Artery;
@@ -26,3 +26,11 @@ export const IndicatorCTX = React.createContext<IndicatorContext>({
   setGreenZone: () => {},
   setShowIndicator: () => {},
 });
+
+interface ActionsContext {
+  emptyChildrenPlaceholder?: EmptyChildPlaceholder;
+  isNodeSupportChildren?: (node: NodeWithoutChild) => Promise<boolean>;
+  onDropFile?: (file: File) => Promise<string>;
+}
+
+export const ActionsCtx = React.createContext<ActionsContext>({});
