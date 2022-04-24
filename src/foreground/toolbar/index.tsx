@@ -53,7 +53,8 @@ function ShadowNodeToolbar(): JSX.Element | null {
       return;
     }
     onChange({ ...artery, node: newRoot });
-    setActiveNode(newNode);
+    // this really annoying if changed the active node, so comment below line
+    // setActiveNode(newNode);
   }
 
   if (!activeNode || !shadowNode) {

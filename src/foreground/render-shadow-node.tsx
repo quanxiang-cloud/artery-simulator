@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import { throttle } from 'lodash';
 import cs from 'classnames';
 import { Artery, Node } from '@one-for-all/artery';
@@ -32,16 +32,14 @@ function RenderShadowNode({ shadowNode, className }: Props): JSX.Element {
   const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
     useContext(IndicatorCTX);
 
-  const handleDragOver = useCallback(() => {
-    return throttle((e) => {
-      setShowIndicator(true);
+  const handleDragOver = throttle((e) => {
+    setShowIndicator(true);
 
-      const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY }, shadowNodes, draggingNodeID);
-      setGreenZone(greenZone);
+    const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY }, shadowNodes, draggingNodeID);
+    setGreenZone(greenZone);
 
-      return false;
-    });
-  }, []);
+    return false;
+  });
 
   function handleClick() {
     const arteryNode = findNodeByID(artery.node, id);

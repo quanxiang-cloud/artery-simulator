@@ -10,6 +10,7 @@ import Toolbar from './toolbar';
 
 interface Props {
   nodes: VisibleNode[];
+  scrolling: boolean;
 }
 
 function isNodeSupportChildren(id: string, artery: Artery): boolean {
@@ -22,12 +23,15 @@ function isNodeSupportChildren(id: string, artery: Artery): boolean {
   return 'name' in node && node.name === 'div';
 }
 
-function ShadowNodes({ nodes }: Props): JSX.Element {
+function ShadowNodes({ nodes, scrolling }: Props): JSX.Element {
   const { artery } = useContext(ArteryCtx);
   const [shadowNodes, setShadowNodes] = useState<Array<ShadowNode>>([]);
 
   useEffect(() => {
-    console.log('run effect')
+    if (scrolling) {
+      return;
+    }
+
     const _shadowNodes = nodes
       .map((node) => {
         const parentIDs = getNodeParentIDs(artery.node, node.id);
@@ -48,7 +52,7 @@ function ShadowNodes({ nodes }: Props): JSX.Element {
       .filter((n): n is ShadowNode => !!n);
 
     setShadowNodes(_shadowNodes);
-  }, [nodes]);
+  }, [nodes, scrolling]);
 
   return (
     <ShadowNodesContext.Provider value={shadowNodes}>
