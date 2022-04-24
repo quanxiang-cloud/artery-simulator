@@ -2,10 +2,10 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Artery } from '@one-for-all/artery';
 import { findNodeByID, getNodeParentIDs } from '@one-for-all/artery-utils';
 
-import { ShadowNode, VisibleNode } from '../types';
+import { ContourNode, VisibleNode } from '../types';
 import { ArteryCtx } from '../contexts';
-import RenderShadowNode from './render-shadow-node';
-import { ShadowNodesContext } from './contexts';
+import RenderContourNode from './render-contour-node';
+import { ContourNodesContext } from './contexts';
 import Toolbar from './toolbar';
 
 interface Props {
@@ -23,23 +23,23 @@ function isNodeSupportChildren(id: string, artery: Artery): boolean {
   return 'name' in node && node.name === 'div';
 }
 
-function ShadowNodes({ nodes, scrolling }: Props): JSX.Element {
+function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
   const { artery } = useContext(ArteryCtx);
-  const [shadowNodes, setShadowNodes] = useState<Array<ShadowNode>>([]);
+  const [contourNodes, setContourNodes] = useState<Array<ContourNode>>([]);
 
   useEffect(() => {
     if (scrolling) {
       return;
     }
 
-    const _shadowNodes = nodes
+    const _contourNodes = nodes
       .map((node) => {
         const parentIDs = getNodeParentIDs(artery.node, node.id);
         if (!parentIDs) {
           return false;
         }
 
-        const shadowNode: ShadowNode = {
+        const contour: ContourNode = {
           ...node,
           nodePath: parentIDs,
           depth: parentIDs.length,
@@ -47,28 +47,23 @@ function ShadowNodes({ nodes, scrolling }: Props): JSX.Element {
           supportChildren: isNodeSupportChildren(node.id, artery),
         };
 
-        return shadowNode;
+        return contour;
       })
-      .filter((n): n is ShadowNode => !!n);
+      .filter((n): n is ContourNode => !!n);
 
-    setShadowNodes(_shadowNodes);
+    setContourNodes(_contourNodes);
   }, [nodes, scrolling]);
 
   return (
-    <ShadowNodesContext.Provider value={shadowNodes}>
-      <div className="shadow-nodes">
-        {shadowNodes.map((shadowNode) => {
-          return (
-            <RenderShadowNode
-              key={shadowNode.id}
-              shadowNode={shadowNode}
-            />
-          );
+    <ContourNodesContext.Provider value={contourNodes}>
+      <div className="contour-nodes">
+        {contourNodes.map((contour) => {
+          return <RenderContourNode key={contour.id} contourNode={contour} />;
         })}
       </div>
       <Toolbar />
-    </ShadowNodesContext.Provider>
+    </ContourNodesContext.Provider>
   );
 }
 
-export default ShadowNodes;
+export default ContourNodes;

@@ -3,13 +3,13 @@ import { throttle } from 'lodash';
 import cs from 'classnames';
 import { Artery, Node } from '@one-for-all/artery';
 
-import { ShadowNode } from '../types';
+import { ContourNode } from '../types';
 import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
 import calcGreenZone from './calc-green-zone';
-import { ShadowNodesContext } from './contexts';
-import useShadowNodeStyle from './use-shadow-node-style';
+import { ContourNodesContext } from './contexts';
+import useContourNodeStyle from './use-active-contour-node';
 import { moveNode, dropNode, jsonParse } from './helper';
-import ShadowNodeToolbar from './toolbar';
+import ContourNodeToolbar from './toolbar';
 import { findNodeByID } from '@one-for-all/artery-utils';
 
 function preventDefault(e: any): false {
@@ -19,23 +19,23 @@ function preventDefault(e: any): false {
 }
 
 interface Props {
-  shadowNode: ShadowNode;
+  contourNode: ContourNode;
   className?: string;
 }
 
-function RenderShadowNode({ shadowNode, className }: Props): JSX.Element {
-  const { id } = shadowNode;
+function RenderContourNode({ contourNode, className }: Props): JSX.Element {
+  const { id } = contourNode;
   const { rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
   const { onChange } = useContext(ActionsCtx);
-  const style = useShadowNodeStyle(shadowNode);
-  const shadowNodes = useContext(ShadowNodesContext);
+  const style = useContourNodeStyle(contourNode);
+  const contourNodes = useContext(ContourNodesContext);
   const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
     useContext(IndicatorCTX);
 
   const handleDragOver = throttle((e) => {
     setShowIndicator(true);
 
-    const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY }, shadowNodes, draggingNodeID);
+    const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY }, contourNodes, draggingNodeID);
     setGreenZone(greenZone);
 
     return false;
@@ -44,11 +44,9 @@ function RenderShadowNode({ shadowNode, className }: Props): JSX.Element {
   function handleClick() {
     const arteryNode = findNodeByID(artery.node, id);
     if (arteryNode) {
-      setActiveNode(arteryNode)
+      setActiveNode(arteryNode);
     }
   }
-
-
 
   // todo give this function a better name
   function handleDrop(e: React.DragEvent<HTMLElement>): Artery | undefined {
@@ -123,9 +121,9 @@ function RenderShadowNode({ shadowNode, className }: Props): JSX.Element {
       key={id}
       style={style}
       onClick={handleClick}
-      className={cs('shadow-node', className, {
-        'shadow-node--root': rootNodeID === id,
-        'shadow-node--active': activeNode?.id === id,
+      className={cs('contour-node', className, {
+        'contour-node--root': rootNodeID === id,
+        'contour-node--active': activeNode?.id === id,
       })}
     >
       {/* <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -135,4 +133,4 @@ function RenderShadowNode({ shadowNode, className }: Props): JSX.Element {
   );
 }
 
-export default RenderShadowNode;
+export default RenderContourNode;

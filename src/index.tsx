@@ -74,12 +74,7 @@ function Simulator({
                 plugins={plugins}
                 scrollPosition={scrollPosition}
               />
-              {report && (
-                <Foreground
-                  report={report}
-                  onScroll={setScrollPosition}
-                />
-              )}
+              {report && <Foreground report={report} onScroll={setScrollPosition} />}
               {isShowIndicator && greenZone && <RenderGreenZone greenZone={greenZone} />}
             </div>
           </ActionsCtx.Provider>

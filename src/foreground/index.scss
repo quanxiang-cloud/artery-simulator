@@ -11,24 +11,24 @@
   position: relative;
 }
 
-.shadow-nodes {
+.contour-nodes {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
 }
 
-.shadow-node {
+.contour-node {
   position: absolute;
   border-width: 2px;
 
-  &:hover:not(.shadow-node--root, .shadow-node--active) {
+  &:hover:not(.contour-node--root, .contour-node--active) {
     border-color: #0084ff;
     border-style: dashed;
   }
 }
 
-.shadow-node--active {
+.contour-node--active {
   border-color: #0084ff;
   border-style: solid;
 }
@@ -67,15 +67,15 @@ $indictorColor: green;
   box-shadow: inset -8px 0 0 0px $indictorColor;
 }
 
-.active-shadow-node-toolbar {
+.active-contour-node-toolbar {
   position: absolute;
   display: flex;
   align-items: center;
   top: -30px;
   z-index: 1;
 
-  .active-shadow-node-toolbar__parents,
-  .active-shadow-node-toolbar__action {
+  .active-contour-node-toolbar__parents,
+  .active-contour-node-toolbar__action {
     padding: 4px;
     margin-right: 4px;
     color: white;
@@ -85,7 +85,7 @@ $indictorColor: green;
     background-color: #0084ff;
   }
 
-  .active-shadow-node-toolbar__parents {
+  .active-contour-node-toolbar__parents {
     display: inline-block;
     max-width: 150px;
     overflow: hidden;
@@ -93,7 +93,7 @@ $indictorColor: green;
     white-space: nowrap;
   }
 
-  .active-shadow-node-toolbar__action {
+  .active-contour-node-toolbar__action {
     display: flex;
     justify-content: center;
     align-items: center;

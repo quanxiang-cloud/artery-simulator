@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
-import ShadowNodes from './shadow-nodes';
-import { SimulatorReport } from '../types';
+import ContourNodes from './contour-nodes';
+import type { SimulatorReport } from '../types';
 
 import './index.scss';
 
@@ -32,7 +32,7 @@ function Foreground({ report, onScroll }: Props): JSX.Element {
         className="foreground-scroll"
         style={{ height: `${report.areaHeight}px`, width: `${report.areaWidth}px` }}
       />
-      <ShadowNodes nodes={report.visibleNodes} scrolling={scrolling} />
+      <ContourNodes nodes={report.visibleNodes} scrolling={scrolling} />
     </div>
   );
 }

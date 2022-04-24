@@ -1,4 +1,4 @@
-import { GreenZone, ShadowNode, Position } from '../types';
+import { GreenZone, ContourNode, Position } from '../types';
 
 interface Cursor {
   x: number;
@@ -9,11 +9,11 @@ function isInside(x: number, y: number, rect: DOMRectReadOnly): boolean {
   return x > rect.left && x < rect.right && y > rect.top && y < rect.bottom;
 }
 
-function getMostInner(cursor: Cursor, shadowNodes: ShadowNode[]): ShadowNode | undefined {
-  let mostInner: ShadowNode | undefined = undefined;
+function getMostInner(cursor: Cursor, contourNodes: ContourNode[]): ContourNode | undefined {
+  let mostInner: ContourNode | undefined = undefined;
   let smallestArea = Infinity;
 
-  for (const current of shadowNodes) {
+  for (const current of contourNodes) {
     if (!isInside(cursor.x, cursor.y, current.raw)) {
       continue;
     }
@@ -60,10 +60,10 @@ function getPosition({ x, rect, supportInner }: GetPositionParam): Position {
 
 function calcGreenZone(
   cursor: Cursor,
-  shadowNodes: ShadowNode[],
+  contourNodes: ContourNode[],
   draggingNodeID?: string,
 ): GreenZone | undefined {
-  const _shadowNodes = shadowNodes.filter(({ id, nodePath }) => {
+  const _contourNodes = contourNodes.filter(({ id, nodePath }) => {
     if (id === draggingNodeID) {
       return false;
     }
@@ -76,7 +76,7 @@ function calcGreenZone(
     return true;
   });
 
-  const mostInner = getMostInner(cursor, _shadowNodes);
+  const mostInner = getMostInner(cursor, _contourNodes);
   if (!mostInner) {
     return;
   }

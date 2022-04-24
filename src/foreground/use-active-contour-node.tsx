@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { ShadowNode } from '../types';
+import { ContourNode } from '../types';
 
-export default function useShadowNodeStyle({ depth, absolutePosition }: ShadowNode): React.CSSProperties {
+export default function useContourNodeStyle({ depth, absolutePosition }: ContourNode): React.CSSProperties {
   const { height, width, x, y } = absolutePosition;
   return useMemo(() => {
     return {

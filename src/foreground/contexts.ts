@@ -1,4 +1,4 @@
 import React from 'react';
-import { ShadowNode } from '../types';
+import { ContourNode } from '../types';
 
-export const ShadowNodesContext = React.createContext<Array<ShadowNode>>([]);
+export const ContourNodesContext = React.createContext<Array<ContourNode>>([]);

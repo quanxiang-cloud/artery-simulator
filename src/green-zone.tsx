@@ -2,13 +2,13 @@ import React, { useContext, useMemo } from 'react';
 import cs from 'classnames';
 import { ArteryCtx } from './contexts';
 
-import { GreenZone, ShadowNode } from './types';
+import { GreenZone, ContourNode } from './types';
 
 interface Props {
   greenZone: GreenZone;
 }
 
-function useShadowNodeStyle({ depth, relativeRect }: ShadowNode): React.CSSProperties {
+function useContourNodeStyle({ depth, relativeRect }: ContourNode): React.CSSProperties {
   const { height, width, x, y } = relativeRect;
   return useMemo(() => {
     return {
@@ -21,7 +21,7 @@ function useShadowNodeStyle({ depth, relativeRect }: ShadowNode): React.CSSPrope
 }
 
 function RenderGreenZone({ greenZone }: Props): JSX.Element {
-  const style = useShadowNodeStyle(greenZone.mostInnerNode);
+  const style = useContourNodeStyle(greenZone.mostInnerNode);
   const { rootNodeID } = useContext(ArteryCtx);
 
   return (

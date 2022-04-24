@@ -13,7 +13,7 @@ export interface SimulatorReport {
   areaWidth: number;
 }
 
-export interface ShadowNode extends VisibleNode {
+export interface ContourNode extends VisibleNode {
   nodePath: string[];
   depth: number;
   supportChildren: boolean;
@@ -34,7 +34,7 @@ export type Position =
 export interface GreenZone {
   hoveringNodeID: string;
   position: Position;
-  mostInnerNode: ShadowNode;
+  mostInnerNode: ContourNode;
 }
 
 export type NodeWithoutChild =
