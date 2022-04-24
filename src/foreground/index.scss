@@ -65,3 +65,46 @@ $indictorColor: green;
 .green-zone-indicator--inner-right {
   box-shadow: inset -8px 0 0 0px $indictorColor;
 }
+
+.active-shadow-node-toolbar {
+  position: absolute;
+  top: -8px;
+  transform: translate(8px, -100%);
+
+  .active-shadow-node-toolbar__parents,
+  .active-shadow-node-toolbar__action {
+    padding: 4px;
+    margin-right: 4px;
+    color: white;
+    font-size: 14px;
+    border-radius: 2px;
+
+    background-color: #4285f4;
+  }
+
+  .active-shadow-node-toolbar__action {
+    cursor: pointer;
+  }
+}
+
+.active-node-parents {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .active-node-parents__parent {
+    max-width: 200px;
+    padding: 4px;
+    margin-bottom: 4px;
+    color: white;
+    background-color: #4285f4;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

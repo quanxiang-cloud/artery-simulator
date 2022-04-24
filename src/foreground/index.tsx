@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { SimulatorReport } from '../types';
 import ShadowNodes from './shadow-nodes';
+import { SimulatorReport } from '../types';
 import { debounce } from '../utils';
 
 import './index.scss';

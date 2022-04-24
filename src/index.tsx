@@ -22,6 +22,7 @@ interface Props {
   emptyChildrenPlaceholder?: EmptyChildPlaceholder;
   isNodeSupportChildren?: (parent: NodeWithoutChild) => Promise<boolean>;
   onDropFile?: (file: File) => Promise<string>;
+  genNodeID: () => string;
 }
 
 const ALL_ELEMENTS = new Map();
@@ -32,6 +33,7 @@ function Simulator({
   className,
   setActiveNode,
   activeNode,
+  genNodeID,
   emptyChildrenPlaceholder,
   isNodeSupportChildren,
   onDropFile,
@@ -51,7 +53,7 @@ function Simulator({
   }
 
   return (
-    <ArteryCtx.Provider value={{ artery, rootNodeID: artery.node.id, activeNode }}>
+    <ArteryCtx.Provider value={{ artery, rootNodeID: artery.node.id, activeNode, setActiveNode }}>
       <IndicatorCTX.Provider
         value={{
           setGreenZone: optimizedSetGreenZone,
@@ -63,7 +65,7 @@ function Simulator({
       >
         <AllElementsCTX.Provider value={ALL_ELEMENTS}>
           <ActionsCtx.Provider
-            value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile, onChange }}
+            value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile, onChange, genNodeID }}
           >
             <div className={cs('artery-simulator-root', className)}>
               <Background

@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import cs from 'classnames';
 import { Artery, Node } from '@one-for-all/artery';
 
-import { Position, ShadowNode } from '../types';
+import { ShadowNode } from '../types';
 import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
 import { debounce } from '../utils';
 import calcGreenZone from './calc-green-zone';
 import { ShadowNodesContext } from './contexts';
 import useShadowNodeStyle from './use-shadow-node-style';
 import { moveNode, dropNode, jsonParse } from './helper';
+import ShadowNodeToolbar from './toolbar';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -19,24 +20,18 @@ function preventDefault(e: any): false {
 interface Props {
   shadowNode: ShadowNode;
   onClick: () => void;
-  isActive: boolean;
   className?: string;
 }
 
-function RenderShadowNode({
-  shadowNode,
-  onClick,
-  isActive,
-  className,
-}: // onDrop,
-Props): JSX.Element {
+function RenderShadowNode({ shadowNode, onClick, className }: Props): JSX.Element {
   const { id } = shadowNode;
-  const { rootNodeID, artery } = useContext(ArteryCtx);
+  const { rootNodeID, artery, activeNode } = useContext(ArteryCtx);
   const { onChange } = useContext(ActionsCtx);
   const style = useShadowNodeStyle(shadowNode);
   const shadowNodes = useContext(ShadowNodesContext);
   const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
     useContext(IndicatorCTX);
+  const showToolbar = activeNode?.id === id && rootNodeID !== id;
 
   const handleDragOver = debounce((e) => {
     setShowIndicator(true);
@@ -65,7 +60,7 @@ Props): JSX.Element {
       });
 
       if (newRoot) {
-        return  { ...artery, node: newRoot };
+        return { ...artery, node: newRoot };
       }
 
       return;
@@ -74,7 +69,12 @@ Props): JSX.Element {
     const droppedNode = jsonParse<Node>(e.dataTransfer.getData('__artery-node'));
     if (droppedNode) {
       // todo drop action
-      const newRoot = dropNode({ root: artery.node, node: droppedNode, hoveringNodeID: greenZone.hoveringNodeID, position: greenZone.position });
+      const newRoot = dropNode({
+        root: artery.node,
+        node: droppedNode,
+        hoveringNodeID: greenZone.hoveringNodeID,
+        position: greenZone.position,
+      });
       if (newRoot) {
         return { ...artery, node: newRoot };
       }
@@ -117,9 +117,10 @@ Props): JSX.Element {
       onClick={onClick}
       className={cs('shadow-node', className, {
         'shadow-node--root': rootNodeID === id,
-        'shadow-node--active': isActive,
+        'shadow-node--active': activeNode?.id === id,
       })}
     >
+      {showToolbar && <ShadowNodeToolbar shadowNode={shadowNode} />}
       {/* <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <span>{id}</span>
       </div> */}

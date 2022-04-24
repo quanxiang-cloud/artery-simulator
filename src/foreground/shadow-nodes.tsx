@@ -23,7 +23,7 @@ function isNodeSupportChildren(id: string, artery: Artery): boolean {
 }
 
 function ShadowNodes({ nodes, setActiveID }: Props): JSX.Element {
-  const { artery, activeNode } = useContext(ArteryCtx);
+  const { artery } = useContext(ArteryCtx);
   const [shadowNodes, setShadowNodes] = useState<Array<ShadowNode>>([]);
 
   useEffect(() => {
@@ -57,7 +57,6 @@ function ShadowNodes({ nodes, setActiveID }: Props): JSX.Element {
             <RenderShadowNode
               key={shadowNode.id}
               shadowNode={shadowNode}
-              isActive={activeNode?.id === shadowNode.id}
               onClick={() => setActiveID(shadowNode.id)}
             />
           );

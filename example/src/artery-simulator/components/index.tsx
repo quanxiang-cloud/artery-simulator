@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import ArterySimulator from '@one-for-all/artery-simulator';
+import { nanoid } from 'nanoid';
 
 import repository from './repository';
 import arteryForTestingSimulator from './artery-for-testing-simulator';
 import ArterySpec from '@one-for-all/artery';
-import { isSupportChildren } from './heler';
+import { isSupportChildren } from './helper';
 
 function Placeholder(): JSX.Element {
   return <div>请拖拽元素到此处！</div>;
+}
+
+function genNodeID(): string {
+  return nanoid();
 }
 
 function SimulatorInExample(): JSX.Element {
@@ -19,6 +24,7 @@ function SimulatorInExample(): JSX.Element {
       artery={artery}
       plugins={{ repository }}
       activeNode={activeNode}
+      genNodeID={genNodeID}
       setActiveNode={setActiveNode}
       onChange={setArtery}
       isNodeSupportChildren={isSupportChildren}
