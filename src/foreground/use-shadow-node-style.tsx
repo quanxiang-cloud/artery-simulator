@@ -6,9 +6,9 @@ export default function useShadowNodeStyle({ depth, absolutePosition }: ShadowNo
   return useMemo(() => {
     return {
       zIndex: depth,
-      height: absolutePosition.height,
-      width: absolutePosition.width,
-      transform: `translate(${absolutePosition.x}px, ${absolutePosition.y}px)`,
+      height: height,
+      width: width,
+      transform: `translate(${x}px, ${y}px)`,
     };
   }, [height, width, x, y, depth]);
 }

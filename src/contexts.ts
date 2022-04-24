@@ -31,6 +31,9 @@ interface ActionsContext {
   emptyChildrenPlaceholder?: EmptyChildPlaceholder;
   isNodeSupportChildren?: (node: NodeWithoutChild) => Promise<boolean>;
   onDropFile?: (file: File) => Promise<string>;
+  onChange: (artery: Artery) => void;
 }
 
-export const ActionsCtx = React.createContext<ActionsContext>({});
+export const ActionsCtx = React.createContext<ActionsContext>({
+  onChange: () => {},
+});

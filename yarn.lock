@@ -564,10 +564,10 @@
     react-jsx-parser "1.29.0"
     rxjs "^7.4.0"
 
-"@one-for-all/artery-utils@0.10.0":
-  version "0.10.0"
-  resolved "https://registry.npmmirror.com/@one-for-all/artery-utils/-/artery-utils-0.10.0.tgz#cff4b29e6616b084a5ca75aa45ec3cb682dc8987"
-  integrity sha512-M3qWmYAWysuEDJRNmp4rQC/Owc+bQQ1FAY2LwRj8/xif115q8Y6ZYgXBih5AN+IRpb2eugzE3/vO9H3v2IPPTQ==
+"@one-for-all/artery-utils@0.11.1":
+  version "0.11.1"
+  resolved "https://registry.npmmirror.com/@one-for-all/artery-utils/-/artery-utils-0.11.1.tgz#13f22ed0d381e06f1f38df002bcdcf1a506e152f"
+  integrity sha512-3WJxft5qZmryEVawZgkq0Te2GqjcgqlMnsFL4SWg08IPnXB6hXam++/CPRZYf8Ly4eQlxeOoN/y6FJWY6yZ6vg==
   dependencies:
     "@one-for-all/artery" "0.15.0"
     immutable "4.0.0"
@@ -577,10 +577,10 @@
   resolved "https://registry.npmmirror.com/@one-for-all/artery/-/artery-0.15.0.tgz#495bdb35365a606a126ecfc8323a5dc086c6f1c5"
   integrity sha512-zZmnK09Zt33s335GBdQHMy5sG7+rSrWHaz1mqjIrdXLHWUvkkOISuEV739SWgnCamqEwUv58/QDTH9/VMIb32w==
 
-"@one-for-all/elements-radar@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.npmmirror.com/@one-for-all/elements-radar/-/elements-radar-0.1.1.tgz#0620f27c8d1e912d6b0d14fc05855f60b40f0c61"
-  integrity sha512-lTDMrdE2PC+m34uzgBKRj5U+PNwtTUau+hqZNBkUda/o0VdZhMyv/Hf7Jp2lM1q6LMmrkQ7xzK1eCBmX3O1drg==
+"@one-for-all/elements-radar@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmmirror.com/@one-for-all/elements-radar/-/elements-radar-0.1.2.tgz#ebab3983da8d7cd93fdae4b6046dea6dde383b93"
+  integrity sha512-LDtcMFpJjI9MLcFUIXJTFJ8mYMrOeVSPgUHkP+DS1u4awplemcG8EaQi/MwpWyYPM/0uPpIZhDAoMR0jTP5LIQ==
   dependencies:
     rxjs "^7.4.0"
 

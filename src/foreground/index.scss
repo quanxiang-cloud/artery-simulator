@@ -19,7 +19,7 @@
 
 .shadow-node {
   position: absolute;
-  border-width: 1px;
+  border-width: 2px;
 
   &:hover:not(.shadow-node--root, .shadow-node--active) {
     border-color: #4285f4;

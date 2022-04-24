@@ -2,18 +2,17 @@ import React, { useContext } from 'react';
 import cs from 'classnames';
 
 import { Position, ShadowNode } from '../types';
-import { ArteryCtx, IndicatorCTX } from '../contexts';
+import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
 import { debounce } from '../utils';
 import calcGreenZone from './calc-green-zone';
 import { ShadowNodesContext } from './contexts';
 import useShadowNodeStyle from './use-shadow-node-style';
+import { moveNode } from './helper';
 
 function preventDefault(e: any): false {
   e.preventDefault();
   return false;
 }
-
-function handleMove(nodeID: string, targetID: string, position: Position): void {}
 
 interface Props {
   shadowNode: ShadowNode;
@@ -30,7 +29,8 @@ function RenderShadowNode({
 }: // onDrop,
 Props): JSX.Element {
   const { id } = shadowNode;
-  const { rootNodeID } = useContext(ArteryCtx);
+  const { rootNodeID, artery } = useContext(ArteryCtx);
+  const { onChange } = useContext(ActionsCtx);
   const style = useShadowNodeStyle(shadowNode);
   const shadowNodes = useContext(ShadowNodesContext);
   const { setGreenZone, greenZone, setShowIndicator } = useContext(IndicatorCTX);
@@ -47,7 +47,10 @@ Props): JSX.Element {
       return false;
     }
 
-    handleMove(shadowNode.id, greenZone.hoveringNodeID, greenZone.position);
+    const newRoot = moveNode(artery.node, greenZone.draggingNodeID, greenZone.hoveringNodeID, greenZone.position);
+    if (newRoot) {
+      onChange({ ...artery, node: newRoot });
+    }
 
     // reset green zone to undefine to prevent green zone first paine flash
     setGreenZone(undefined);
@@ -71,7 +74,9 @@ Props): JSX.Element {
         'shadow-node--active': isActive,
       })}
     >
-      {/* {id} */}
+      {/* <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <span>{id}</span>
+      </div> */}
     </div>
   );
 }

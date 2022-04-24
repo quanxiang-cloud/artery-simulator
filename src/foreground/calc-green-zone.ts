@@ -85,7 +85,7 @@ function calcGreenZone(cursor: Cursor, shadowNodes: ShadowNode[]): GreenZone | u
     supportInner: mostInner.supportChildren,
   });
 
-  return { position, hoveringNodeID: mostInner.id, mostInnerNode: mostInner };
+  return { position, hoveringNodeID: mostInner.id, mostInnerNode: mostInner, draggingNodeID: cursor.nodeID };
 }
 
 export default calcGreenZone;

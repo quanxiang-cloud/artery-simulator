@@ -35,6 +35,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-1',
+              }
+            }
           },
           {
             id: 'card-2',
@@ -42,6 +48,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-2',
+              }
+            }
           },
           {
             id: 'card-3',
@@ -49,6 +61,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-3',
+              }
+            }
           },
           {
             id: 'card-4',
@@ -56,6 +74,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-4',
+              }
+            }
           },
           {
             id: 'card-5',
@@ -63,6 +87,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-5',
+              }
+            }
           },
           {
             id: 'card-6',
@@ -70,6 +100,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-6',
+              }
+            }
           },
           {
             id: 'card-7',
@@ -77,6 +113,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-7',
+              }
+            }
           },
           {
             id: 'card-8',
@@ -84,6 +126,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-8',
+              }
+            }
           },
           {
             id: 'card-9',
@@ -91,6 +139,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-9',
+              }
+            }
           },
           {
             id: 'card-10',
@@ -98,6 +152,12 @@ const arteryForTestingSimulator: Artery = {
             packageName: 'SimulatorDedicated',
             packageVersion: 'whatever',
             exportName: 'Card',
+            props: {
+              id: {
+                type: 'constant_property',
+                value: 'card-10',
+              }
+            }
           },
         ],
       },

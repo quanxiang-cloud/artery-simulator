@@ -35,14 +35,20 @@ function Simulator({
   emptyChildrenPlaceholder,
   isNodeSupportChildren,
   onDropFile,
+  onChange,
 }: Props): JSX.Element {
   const [report, setReport] = useState<SimulatorReport>();
   const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
   const [greenZone, setGreenZone] = useState<GreenZone>();
   const [isShowIndicator, setShowIndicator] = useState(false);
 
+  // todo fix this
   function optimizedSetGreenZone(newZone?: GreenZone): void {
-    if (newZone?.hoveringNodeID !== greenZone?.hoveringNodeID || newZone?.position !== greenZone?.position) {
+    if (
+      newZone?.hoveringNodeID !== greenZone?.hoveringNodeID ||
+      newZone?.position !== greenZone?.position ||
+      newZone?.draggingNodeID !== greenZone?.draggingNodeID
+    ) {
       setGreenZone(newZone);
     }
   }
@@ -51,7 +57,7 @@ function Simulator({
     <ArteryCtx.Provider value={{ artery, rootNodeID: artery.node.id, activeNode }}>
       <IndicatorCTX.Provider value={{ setGreenZone: optimizedSetGreenZone, greenZone, setShowIndicator }}>
         <AllElementsCTX.Provider value={ALL_ELEMENTS}>
-          <ActionsCtx.Provider value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile }}>
+          <ActionsCtx.Provider value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile, onChange }}>
             <div className={cs('artery-simulator-root', className)}>
               <Background
                 onReport={setReport}

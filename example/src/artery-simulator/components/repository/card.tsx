@@ -8,6 +8,6 @@ const style: React.CSSProperties = {
   margin: '8px',
 };
 
-export default function Card(): JSX.Element {
-  return <div style={style}>simply card</div>;
+export default function Card({ id }: { id: string; }): JSX.Element {
+  return <div style={style}>simply card: {id}</div>;
 }

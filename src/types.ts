@@ -33,6 +33,7 @@ export type Position =
 
 export interface GreenZone {
   hoveringNodeID: string;
+  draggingNodeID: string;
   position: Position;
   mostInnerNode: ShadowNode;
 }

@@ -29,19 +29,17 @@ function ShadowNodes({ nodes, setActiveID }: Props): JSX.Element {
   useEffect(() => {
     const _shadowNodes = nodes
       .map((node) => {
-        const { id, absolutePosition } = node;
-        const parentIDs = getNodeParentIDs(artery.node, id);
+        const parentIDs = getNodeParentIDs(artery.node, node.id);
         if (!parentIDs) {
           return false;
         }
 
         const shadowNode: ShadowNode = {
           ...node,
-          absolutePosition,
           nodePath: parentIDs,
           depth: parentIDs.length,
-          area: node.rect.height * node.rect.width,
-          supportChildren: isNodeSupportChildren(id, artery),
+          area: node.relativeRect.height * node.relativeRect.width,
+          supportChildren: isNodeSupportChildren(node.id, artery),
         };
 
         return shadowNode;
