@@ -2,12 +2,12 @@ import React from 'react';
 
 const style: React.CSSProperties = {
   display: 'inline-block',
-  height: '100px',
-  width: '200px',
+  // height: '10px',
+  // width: '20px',
   border: '1px solid grey',
   margin: '8px',
 };
 
 export default function Card({ id }: { id: string }): JSX.Element {
-  return <div style={style}>simply card: {id}</div>;
+  return <div style={style}>{id}</div>;
 }

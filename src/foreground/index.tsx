@@ -14,7 +14,7 @@ function Foreground({ report, onScroll }: Props): JSX.Element {
   const timeRef = useRef<number>();
   const [scrolling, setScrolling] = useState(false);
 
-  function handleScroll(e: React.UIEvent<HTMLDivElement>) {
+  function handleScroll(e: React.UIEvent<HTMLDivElement>): void {
     // @ts-ignore
     onScroll({ x: e.target.scrollLeft, y: e.target.scrollTop });
 
