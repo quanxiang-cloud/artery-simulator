@@ -69,11 +69,11 @@ function ShadowNodeToolbar({ shadowNode }: Props): JSX.Element | null {
       >
         {currentNode.label || currentNode.id}
       </span>
-      <span onClick={handleDuplicate} className="active-shadow-node-toolbar__action">
-        <Icon name="content_copy" />
+      <span onClick={handleDuplicate} className="active-shadow-node-toolbar__action" title="复制">
+        <Icon name="content_copy" size={16} />
       </span>
-      <span onClick={handleDelete} className="active-shadow-node-toolbar__action">
-        <Icon name="delete_forever" />
+      <span onClick={handleDelete} className="active-shadow-node-toolbar__action" title="删除">
+        <Icon name="delete_forever" size={16} />
       </span>
       <Popper container={containerRef.current} placement="bottom-start" modifiers={modifiers}>
         <ParentNodes currentNodeID={shadowNode.id} />

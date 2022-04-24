@@ -78,7 +78,7 @@ $indictorColor: green;
     padding: 4px;
     margin-right: 4px;
     color: white;
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 2px;
 
     background-color: #4285f4;
@@ -93,7 +93,12 @@ $indictorColor: green;
   }
 
   .active-shadow-node-toolbar__action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     cursor: pointer;
+    fill: white;
   }
 }
 

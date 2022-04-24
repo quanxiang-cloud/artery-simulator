@@ -14,7 +14,8 @@ function ParentNodes({ currentNodeID }: Props): JSX.Element | null {
   useEffect(() => {
     const _parents = getNodeParents(artery.node, currentNodeID);
 
-    setParents(_parents?.slice(0, 5).reverse() || []);
+    // remove root, and just show the max 5 level parent
+    setParents(_parents?.slice(1).reverse().slice(0, 5) || []);
   }, [artery]);
 
   if (!parents.length) {
