@@ -4,8 +4,9 @@ import { ShadowNode } from '../../types';
 import { ActionsCtx, ArteryCtx } from '../../contexts';
 import ParentNodes from './parent-nodes';
 import { Node } from '@one-for-all/artery';
-import { deleteByID, findNodeByID } from '@one-for-all/artery-utils';
+import { deleteByID, findNodeByID, insertAfter } from '@one-for-all/artery-utils';
 import Icon from '@one-for-all/icon';
+import duplicateNode from './duplicate-node';
 
 interface Props {
   shadowNode: ShadowNode;
@@ -24,7 +25,7 @@ const modifiers = [
 function ShadowNodeToolbar({ shadowNode }: Props): JSX.Element | null {
   const { referenceRef, Popper, handleMouseEnter, handleMouseLeave, handleClick } = usePopper();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { onChange } = useContext(ActionsCtx);
+  const { onChange, genNodeID } = useContext(ActionsCtx);
   const { artery } = useContext(ArteryCtx);
   const [currentNode, setCurrentNode] = useState<Node>();
 
@@ -33,7 +34,18 @@ function ShadowNodeToolbar({ shadowNode }: Props): JSX.Element | null {
     onChange({ ...artery, node: newRoot });
   }
 
-  function handleDuplicate() {}
+  function handleDuplicate() {
+    if (!currentNode) {
+      return;
+    }
+
+    const newNode = duplicateNode(currentNode, genNodeID);
+    const newRoot = insertAfter(artery.node, currentNode.id, newNode);
+    if (!newRoot) {
+      return;
+    }
+    onChange({ ...artery, node: newRoot });
+  }
 
   useEffect(() => {
     const node = findNodeByID(artery.node, shadowNode.id);

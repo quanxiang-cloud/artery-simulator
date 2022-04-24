@@ -68,6 +68,8 @@ $indictorColor: green;
 
 .active-shadow-node-toolbar {
   position: absolute;
+  display: flex;
+  align-items: center;
   top: -8px;
   transform: translate(8px, -100%);
 
@@ -80,6 +82,14 @@ $indictorColor: green;
     border-radius: 2px;
 
     background-color: #4285f4;
+  }
+
+  .active-shadow-node-toolbar__parents {
+    display: inline-block;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .active-shadow-node-toolbar__action {

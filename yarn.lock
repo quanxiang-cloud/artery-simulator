@@ -564,10 +564,10 @@
     react-jsx-parser "1.29.0"
     rxjs "^7.4.0"
 
-"@one-for-all/artery-utils@0.11.1":
-  version "0.11.1"
-  resolved "https://registry.npmmirror.com/@one-for-all/artery-utils/-/artery-utils-0.11.1.tgz#13f22ed0d381e06f1f38df002bcdcf1a506e152f"
-  integrity sha512-3WJxft5qZmryEVawZgkq0Te2GqjcgqlMnsFL4SWg08IPnXB6hXam++/CPRZYf8Ly4eQlxeOoN/y6FJWY6yZ6vg==
+"@one-for-all/artery-utils@0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmmirror.com/@one-for-all/artery-utils/-/artery-utils-0.12.0.tgz#83f5eca95b69486d06797a193f187df123e2403a"
+  integrity sha512-YQCT6iSrlj4pGo525J0sZf0WfWUTfRIjS0VjQTo6qZemPTt4GuLC70kfdPu7J35oxNbWSOCY+bM2A8rPLZrUuw==
   dependencies:
     "@one-for-all/artery" "0.15.0"
     immutable "4.0.0"
