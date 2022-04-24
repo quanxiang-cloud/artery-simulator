@@ -13,22 +13,12 @@ interface Props {
   scrolling: boolean;
 }
 
-function isNodeSupportChildren(id: string, artery: Artery): boolean {
-  const node = findNodeByID(artery.node, id);
-  if (!node) {
-    return false;
-  }
-
-  // TODO fix this
-  return 'name' in node && node.name === 'div';
-}
-
-function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
+function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<ContourNode> {
   const { artery } = useContext(ArteryCtx);
   const [contourNodes, setContourNodes] = useState<Array<ContourNode>>([]);
 
   useEffect(() => {
-    if (scrolling) {
+    if (isScrolling) {
       return;
     }
 
@@ -44,7 +34,6 @@ function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
           nodePath: parentIDs,
           depth: parentIDs.length,
           area: node.relativeRect.height * node.relativeRect.width,
-          supportChildren: isNodeSupportChildren(node.id, artery),
         };
 
         return contour;
@@ -52,7 +41,13 @@ function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
       .filter((n): n is ContourNode => !!n);
 
     setContourNodes(_contourNodes);
-  }, [nodes, scrolling]);
+  }, [nodes, isScrolling]);
+
+  return contourNodes;
+}
+
+function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
+  const contourNodes = useContourNodes(nodes, scrolling);
 
   return (
     <ContourNodesContext.Provider value={contourNodes}>

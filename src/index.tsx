@@ -14,7 +14,7 @@ import './index.scss';
 
 interface Props {
   artery: ArterySpec.Artery;
-  setActiveNode: (node: ArterySpec.Node) => void;
+  setActiveNode: (node?: ArterySpec.Node) => void;
   onChange: (artery: Artery) => void;
   activeNode?: ArterySpec.Node;
   className?: string;

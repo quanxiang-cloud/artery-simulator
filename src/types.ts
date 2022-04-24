@@ -16,7 +16,6 @@ export interface SimulatorReport {
 export interface ContourNode extends VisibleNode {
   nodePath: string[];
   depth: number;
-  supportChildren: boolean;
   area: number;
 }
 

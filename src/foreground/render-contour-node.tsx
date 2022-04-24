@@ -1,16 +1,15 @@
-import React, { useContext } from 'react';
-import { throttle } from 'lodash';
+import React, { useContext, useMemo, useRef } from 'react';
 import cs from 'classnames';
+import { throttle } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
-
-import { ContourNode } from '../types';
-import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
-import calcGreenZone from './calc-green-zone';
-import { ContourNodesContext } from './contexts';
-import useContourNodeStyle from './use-active-contour-node';
-import { moveNode, dropNode, jsonParse } from './helper';
-import ContourNodeToolbar from './toolbar';
 import { findNodeByID } from '@one-for-all/artery-utils';
+
+import useContourNodeStyle from './use-active-contour-node';
+import { calcHoverPosition } from './calc-green-zone';
+import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
+import { moveNode, dropNode, jsonParse } from './helper';
+import { getIsNodeSupportCache } from '../cache';
+import type { ContourNode, NodeWithoutChild } from '../types';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -20,29 +19,41 @@ function preventDefault(e: any): false {
 
 interface Props {
   contourNode: ContourNode;
-  className?: string;
 }
 
-function RenderContourNode({ contourNode, className }: Props): JSX.Element {
-  const { id } = contourNode;
+function RenderContourNode({ contourNode }: Props): JSX.Element {
   const { rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
   const { onChange } = useContext(ActionsCtx);
   const style = useContourNodeStyle(contourNode);
-  const contourNodes = useContext(ContourNodesContext);
   const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
     useContext(IndicatorCTX);
+  const currentArteryNode = useMemo(() => {
+    return findNodeByID(artery.node, contourNode.id);
+  }, [contourNode]);
 
   const handleDragOver = throttle((e) => {
+    if (draggingNodeID === contourNode.id) {
+      return;
+    }
+
     setShowIndicator(true);
 
-    const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY }, contourNodes, draggingNodeID);
-    setGreenZone(greenZone);
+    // TODO bug
+    // if hovering node is draggingNode's parent
+    // dragging node will be move to first
+    const position = calcHoverPosition({
+      x: e.clientX,
+      y: e.clientY,
+      rect: contourNode.raw,
+      supportInner: currentArteryNode ? getIsNodeSupportCache(currentArteryNode as NodeWithoutChild) : false,
+    })
+    setGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
 
     return false;
   });
 
   function handleClick() {
-    const arteryNode = findNodeByID(artery.node, id);
+    const arteryNode = findNodeByID(artery.node, contourNode.id);
     if (arteryNode) {
       setActiveNode(arteryNode);
     }
@@ -91,9 +102,12 @@ function RenderContourNode({ contourNode, className }: Props): JSX.Element {
 
   return (
     <div
-      draggable={id !== rootNodeID}
+      key={contourNode.id}
+      style={style}
+      onClick={handleClick}
+      draggable={contourNode.id !== rootNodeID}
       onDragStart={(e) => {
-        setDraggingNodeID(id);
+        setDraggingNodeID(contourNode.id);
         // todo this has no affect, fix it!
         e.dataTransfer.effectAllowed = 'move';
       }}
@@ -118,18 +132,11 @@ function RenderContourNode({ contourNode, className }: Props): JSX.Element {
 
         return false;
       }}
-      key={id}
-      style={style}
-      onClick={handleClick}
-      className={cs('contour-node', className, {
-        'contour-node--root': rootNodeID === id,
-        'contour-node--active': activeNode?.id === id,
+      className={cs('contour-node', {
+        'contour-node--root': rootNodeID === contourNode.id,
+        'contour-node--active': activeNode?.id === contourNode.id,
       })}
-    >
-      {/* <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <span>{id}</span>
-      </div> */}
-    </div>
+    />
   );
 }
 

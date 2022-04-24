@@ -1,5 +1,6 @@
 import type { HTMLNode, ReactComponentNode } from '@one-for-all/artery-renderer';
 import React, { useContext, useEffect, useState } from 'react';
+import { cacheIsNodeSupportChildren, getIsNodeSupportCache } from '../../cache';
 import { ActionsCtx } from '../../contexts';
 import { NodeWithoutChild } from '../../types';
 
@@ -27,12 +28,20 @@ function Placeholder({ parent }: Props): JSX.Element | null {
   useEffect(() => {
     let unMounting = false;
 
+    const flag = getIsNodeSupportCache(parent);
+    if (flag !== undefined) {
+      setShouldRender(flag);
+      return;
+    }
+
     if (!isNodeSupportChildren) {
       return;
     }
 
     isNodeSupportChildren(getParentNode(parent))
       .then((flag) => {
+        cacheIsNodeSupportChildren(parent, flag);
+
         if (!unMounting) {
           setShouldRender(flag);
         }
