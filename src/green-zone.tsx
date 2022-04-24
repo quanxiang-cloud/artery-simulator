@@ -20,7 +20,6 @@ function useShadowNodeStyle({ depth, relativeRect }: ShadowNode): React.CSSPrope
   }, [height, width, x, y, depth]);
 }
 
-
 function RenderGreenZone({ greenZone }: Props): JSX.Element {
   const style = useShadowNodeStyle(greenZone.mostInnerNode);
   const { rootNodeID } = useContext(ArteryCtx);

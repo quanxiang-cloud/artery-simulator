@@ -41,23 +41,30 @@ function Simulator({
   const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
   const [greenZone, setGreenZone] = useState<GreenZone>();
   const [isShowIndicator, setShowIndicator] = useState(false);
+  const [draggingNodeID, setDraggingNodeID] = useState<string>();
 
   // todo fix this
   function optimizedSetGreenZone(newZone?: GreenZone): void {
-    if (
-      newZone?.hoveringNodeID !== greenZone?.hoveringNodeID ||
-      newZone?.position !== greenZone?.position ||
-      newZone?.draggingNodeID !== greenZone?.draggingNodeID
-    ) {
+    if (newZone?.hoveringNodeID !== greenZone?.hoveringNodeID || newZone?.position !== greenZone?.position) {
       setGreenZone(newZone);
     }
   }
 
   return (
     <ArteryCtx.Provider value={{ artery, rootNodeID: artery.node.id, activeNode }}>
-      <IndicatorCTX.Provider value={{ setGreenZone: optimizedSetGreenZone, greenZone, setShowIndicator }}>
+      <IndicatorCTX.Provider
+        value={{
+          setGreenZone: optimizedSetGreenZone,
+          greenZone,
+          setShowIndicator,
+          setDraggingNodeID,
+          draggingNodeID,
+        }}
+      >
         <AllElementsCTX.Provider value={ALL_ELEMENTS}>
-          <ActionsCtx.Provider value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile, onChange }}>
+          <ActionsCtx.Provider
+            value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile, onChange }}
+          >
             <div className={cs('artery-simulator-root', className)}>
               <Background
                 onReport={setReport}
@@ -77,7 +84,6 @@ function Simulator({
                   }}
                 />
               )}
-              {/* todo fix offset */}
               {isShowIndicator && greenZone && <RenderGreenZone greenZone={greenZone} />}
             </div>
           </ActionsCtx.Provider>

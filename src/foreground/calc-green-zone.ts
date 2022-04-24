@@ -1,7 +1,6 @@
 import { GreenZone, ShadowNode, Position } from '../types';
 
 interface Cursor {
-  nodeID: string;
   x: number;
   y: number;
 }
@@ -59,14 +58,18 @@ function getPosition({ x, rect, supportInner }: GetPositionParam): Position {
   return 'inner';
 }
 
-function calcGreenZone(cursor: Cursor, shadowNodes: ShadowNode[]): GreenZone | undefined {
+function calcGreenZone(
+  cursor: Cursor,
+  shadowNodes: ShadowNode[],
+  draggingNodeID?: string,
+): GreenZone | undefined {
   const _shadowNodes = shadowNodes.filter(({ id, nodePath }) => {
-    if (id === cursor.nodeID) {
+    if (id === draggingNodeID) {
       return false;
     }
 
     // exclude children node
-    if (nodePath.includes(cursor.nodeID)) {
+    if (draggingNodeID && nodePath.includes(draggingNodeID)) {
       return false;
     }
 
@@ -85,7 +88,7 @@ function calcGreenZone(cursor: Cursor, shadowNodes: ShadowNode[]): GreenZone | u
     supportInner: mostInner.supportChildren,
   });
 
-  return { position, hoveringNodeID: mostInner.id, mostInnerNode: mostInner, draggingNodeID: cursor.nodeID };
+  return { position, hoveringNodeID: mostInner.id, mostInnerNode: mostInner };
 }
 
 export default calcGreenZone;

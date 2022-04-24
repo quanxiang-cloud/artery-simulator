@@ -41,19 +41,21 @@ function useRadarRef(
       const deltaY = root.scrollTop || 0;
       const scrollHeight = root.scrollHeight || 0;
       const scrollWidth = root.scrollWidth || 0;
-      const visibleNodes: VisibleNode[] = Array.from(report.entries()).map(([element, { relativeRect, raw }]) => {
-        return {
-          // @ts-ignore
-          id: element.dataset.simulatorNodeId as string,
-          raw,
-          relativeRect,
-          absolutePosition: {
-            ...relativeRect,
-            x: Math.round(relativeRect.x + deltaX),
-            y: Math.round(relativeRect.y + deltaY),
-          },
-        };
-      });
+      const visibleNodes: VisibleNode[] = Array.from(report.entries()).map(
+        ([element, { relativeRect, raw }]) => {
+          return {
+            // @ts-ignore
+            id: element.dataset.simulatorNodeId as string,
+            raw,
+            relativeRect,
+            absolutePosition: {
+              ...relativeRect,
+              x: Math.round(relativeRect.x + deltaX),
+              y: Math.round(relativeRect.y + deltaY),
+            },
+          };
+        },
+      );
 
       onReport({ visibleNodes, areaHeight: scrollHeight, areaWidth: scrollWidth });
     });

@@ -16,6 +16,8 @@ export const ArteryCtx = React.createContext<ArteryContext>({
 });
 
 interface IndicatorContext {
+  draggingNodeID?: string;
+  setDraggingNodeID: (nodeID?: string) => void;
   greenZone?: GreenZone;
   setGreenZone: (greenZone?: GreenZone) => void;
   setShowIndicator: (isShow: boolean) => void;
@@ -23,6 +25,7 @@ interface IndicatorContext {
 }
 
 export const IndicatorCTX = React.createContext<IndicatorContext>({
+  setDraggingNodeID: () => {},
   setGreenZone: () => {},
   setShowIndicator: () => {},
 });

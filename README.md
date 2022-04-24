@@ -14,7 +14,8 @@
 ## TODO
 
 - mock init api state function，这样在 debug 模式下可以让用户操作页面，但不发请求？
-
+- drop node, done
+- toolbar, duplicate node recursively
 
 ## 组件渲染结果分析
 

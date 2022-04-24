@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import cs from 'classnames';
+import { Artery, Node } from '@one-for-all/artery';
 
 import { Position, ShadowNode } from '../types';
 import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
@@ -7,10 +8,11 @@ import { debounce } from '../utils';
 import calcGreenZone from './calc-green-zone';
 import { ShadowNodesContext } from './contexts';
 import useShadowNodeStyle from './use-shadow-node-style';
-import { moveNode } from './helper';
+import { moveNode, dropNode, jsonParse } from './helper';
 
 function preventDefault(e: any): false {
   e.preventDefault();
+  e.stopPropagation();
   return false;
 }
 
@@ -33,39 +35,83 @@ Props): JSX.Element {
   const { onChange } = useContext(ActionsCtx);
   const style = useShadowNodeStyle(shadowNode);
   const shadowNodes = useContext(ShadowNodesContext);
-  const { setGreenZone, greenZone, setShowIndicator } = useContext(IndicatorCTX);
+  const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
+    useContext(IndicatorCTX);
 
-  const handleDrag = debounce((e) => {
-    const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY, nodeID: id }, shadowNodes);
+  const handleDragOver = debounce((e) => {
+    setShowIndicator(true);
+
+    const greenZone = calcGreenZone({ x: e.clientX, y: e.clientY }, shadowNodes, draggingNodeID);
     setGreenZone(greenZone);
+
+    return false;
   });
 
-  function handleDrop(e: React.UIEvent): boolean {
-    e.preventDefault();
-    e.stopPropagation();
+  // todo give this function a better name
+  function handleDrop(e: React.DragEvent<HTMLElement>): Artery | undefined {
+    setShowIndicator(false);
+
     if (!greenZone) {
-      return false;
+      return;
     }
 
-    const newRoot = moveNode(artery.node, greenZone.draggingNodeID, greenZone.hoveringNodeID, greenZone.position);
-    if (newRoot) {
-      onChange({ ...artery, node: newRoot });
+    // move action
+    if (draggingNodeID) {
+      const newRoot = moveNode({
+        root: artery.node,
+        draggingNodeID,
+        hoveringNodeID: greenZone.hoveringNodeID,
+        position: greenZone.position,
+      });
+
+      if (newRoot) {
+        return  { ...artery, node: newRoot };
+      }
+
+      return;
     }
 
-    // reset green zone to undefine to prevent green zone first paine flash
-    setGreenZone(undefined);
-    return false;
+    const droppedNode = jsonParse<Node>(e.dataTransfer.getData('__artery-node'));
+    if (droppedNode) {
+      // todo drop action
+      const newRoot = dropNode({ root: artery.node, node: droppedNode, hoveringNodeID: greenZone.hoveringNodeID, position: greenZone.position });
+      if (newRoot) {
+        return { ...artery, node: newRoot };
+      }
+    }
+
+    return;
   }
 
   return (
     <div
       draggable={id !== rootNodeID}
-      onDragStart={() => setShowIndicator(true)}
-      onDragEnd={() => setShowIndicator(false)}
-      onDrag={handleDrag}
-      onDragOver={preventDefault}
+      onDragStart={(e) => {
+        setDraggingNodeID(id);
+        // todo this has no affect, fix it!
+        e.dataTransfer.effectAllowed = 'move';
+      }}
+      onDragEnd={() => setDraggingNodeID()}
+      onDrag={preventDefault}
+      onDragOver={(e) => {
+        preventDefault(e);
+        handleDragOver(e);
+        return false;
+      }}
       onDragEnter={preventDefault}
-      onDrop={handleDrop}
+      onDrop={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const newArtery = handleDrop(e);
+        if (newArtery) {
+          onChange(newArtery);
+        }
+
+        // reset green zone to undefine to prevent green zone first paine flash
+        setGreenZone(undefined);
+
+        return false;
+      }}
       key={id}
       style={style}
       onClick={onClick}
