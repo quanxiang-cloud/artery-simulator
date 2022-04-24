@@ -1,11 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Artery } from '@one-for-all/artery';
-import { findNodeByID, getNodeParentIDs } from '@one-for-all/artery-utils';
+import { getNodeParentIDs } from '@one-for-all/artery-utils';
 
 import { ContourNode, VisibleNode } from '../types';
-import { ArteryCtx } from '../contexts';
+import { ArteryCtx, ContourNodesContext } from '../contexts';
 import RenderContourNode from './render-contour-node';
-import { ContourNodesContext } from './contexts';
 import Toolbar from './toolbar';
 
 interface Props {

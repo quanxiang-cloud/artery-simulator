@@ -1,6 +1,6 @@
 import React from 'react';
 import { Artery, Node } from '@one-for-all/artery';
-import { GreenZone, NodeWithoutChild } from './types';
+import { ContourNode, GreenZone, NodeWithoutChild } from './types';
 
 interface ArteryContext {
   artery: Artery;
@@ -37,3 +37,5 @@ export const IndicatorCTX = React.createContext<IndicatorContext>({
   setGreenZone: () => {},
   setShowIndicator: () => {},
 });
+
+export const ContourNodesContext = React.createContext<Array<ContourNode>>([]);

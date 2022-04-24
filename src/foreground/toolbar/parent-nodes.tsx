@@ -1,6 +1,6 @@
 import { Node } from '@one-for-all/artery';
 import { getNodeParents } from '@one-for-all/artery-utils';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ArteryCtx } from '../../contexts';
 
 interface Props {

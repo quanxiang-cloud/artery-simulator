@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { ContourNode } from '../../types';
-import { ArteryCtx } from '../../contexts';
-import { ContourNodesContext } from '../contexts';
+import { ArteryCtx, ContourNodesContext } from '../../contexts';
 
-export function useActiveContourNode() {
+export function useActiveContourNode(): ContourNode | undefined {
   const { activeNode } = useContext(ArteryCtx);
   const contourNodes = useContext(ContourNodesContext);
   const [activeContourNode, setActiveNode] = useState<ContourNode>();

@@ -51,7 +51,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
     return false;
   });
 
-  function handleClick() {
+  function handleClick(): void {
     const arteryNode = findNodeByID(artery.node, contourNode.id);
     if (arteryNode) {
       setActiveNode(arteryNode);
