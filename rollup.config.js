@@ -10,7 +10,7 @@ export default {
   input: 'src/index.tsx',
   output: getOutput(packageJSON.name, packageJSON.version),
 
-  external: ['react', 'react-dom', 'rxjs', /@one-for-all\/.*/, /rxjs\/.*/, 'react-jsx-parser', 'history'],
+  external: ['react', 'react-dom', 'rxjs', 'lodash', /@one-for-all\/.*/, /rxjs\/.*/, 'react-jsx-parser', 'history'],
 
   plugins: [
     commonjs(),

@@ -6,10 +6,10 @@ import { ShadowNode, VisibleNode } from '../types';
 import { ArteryCtx } from '../contexts';
 import RenderShadowNode from './render-shadow-node';
 import { ShadowNodesContext } from './contexts';
+import Toolbar from './toolbar';
 
 interface Props {
   nodes: VisibleNode[];
-  setActiveID: (id: string) => void;
 }
 
 function isNodeSupportChildren(id: string, artery: Artery): boolean {
@@ -22,11 +22,12 @@ function isNodeSupportChildren(id: string, artery: Artery): boolean {
   return 'name' in node && node.name === 'div';
 }
 
-function ShadowNodes({ nodes, setActiveID }: Props): JSX.Element {
+function ShadowNodes({ nodes }: Props): JSX.Element {
   const { artery } = useContext(ArteryCtx);
   const [shadowNodes, setShadowNodes] = useState<Array<ShadowNode>>([]);
 
   useEffect(() => {
+    console.log('run effect')
     const _shadowNodes = nodes
       .map((node) => {
         const parentIDs = getNodeParentIDs(artery.node, node.id);
@@ -57,11 +58,11 @@ function ShadowNodes({ nodes, setActiveID }: Props): JSX.Element {
             <RenderShadowNode
               key={shadowNode.id}
               shadowNode={shadowNode}
-              onClick={() => setActiveID(shadowNode.id)}
             />
           );
         })}
       </div>
+      <Toolbar />
     </ShadowNodesContext.Provider>
   );
 }

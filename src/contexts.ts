@@ -6,7 +6,7 @@ interface ArteryContext {
   artery: Artery;
   rootNodeID: string;
   activeNode?: Node;
-  setActiveNode: (node: Node) => void;
+  setActiveNode: (node?: Node) => void;
 }
 
 export const ArteryCtx = React.createContext<ArteryContext>({

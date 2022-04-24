@@ -78,12 +78,6 @@ function Simulator({
                 <Foreground
                   report={report}
                   onScroll={setScrollPosition}
-                  setActiveID={(id) => {
-                    const node = findNodeByID(artery.node, id);
-                    if (node) {
-                      setActiveNode(node);
-                    }
-                  }}
                 />
               )}
               {isShowIndicator && greenZone && <RenderGreenZone greenZone={greenZone} />}
