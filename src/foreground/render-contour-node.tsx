@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useContext, useMemo } from 'react';
 import cs from 'classnames';
 import { throttle } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
@@ -6,7 +6,7 @@ import { findNodeByID } from '@one-for-all/artery-utils';
 
 import useContourNodeStyle from './use-active-contour-node';
 import { calcHoverPosition } from './calc-green-zone';
-import { ActionsCtx, ArteryCtx, IndicatorCTX } from '../contexts';
+import { ArteryCtx, IndicatorCTX } from '../contexts';
 import { moveNode, dropNode, jsonParse } from './helper';
 import { getIsNodeSupportCache } from '../cache';
 import type { ContourNode, NodeWithoutChild } from '../types';
@@ -22,8 +22,7 @@ interface Props {
 }
 
 function RenderContourNode({ contourNode }: Props): JSX.Element {
-  const { rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
-  const { onChange } = useContext(ActionsCtx);
+  const { onChange, rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
   const style = useContourNodeStyle(contourNode);
   const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
     useContext(IndicatorCTX);
@@ -46,7 +45,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       y: e.clientY,
       rect: contourNode.raw,
       supportInner: currentArteryNode ? getIsNodeSupportCache(currentArteryNode as NodeWithoutChild) : false,
-    })
+    });
     setGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
 
     return false;

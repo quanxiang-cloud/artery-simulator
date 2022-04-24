@@ -1,28 +1,26 @@
-import React, { ComponentClass, FunctionComponent, useState } from 'react';
+import React, { useState } from 'react';
 import cs from 'classnames';
 import { Plugins } from '@one-for-all/artery-renderer';
-import ArterySpec, { Artery, HTMLNode, ReactComponentNode } from '@one-for-all/artery';
+import { Artery, Node } from '@one-for-all/artery';
 
 import Background from './background';
 import Foreground from './foreground';
-import { ArteryCtx, IndicatorCTX, ActionsCtx } from './contexts';
-import { EmptyChildPlaceholder, GreenZone, NodeWithoutChild, SimulatorReport } from './types';
+import { ArteryCtx, IndicatorCTX } from './contexts';
+import { GreenZone, NodeWithoutChild, SimulatorReport } from './types';
 import { AllElementsCTX } from './background/contexts';
-import { findNodeByID } from '@one-for-all/artery-utils';
 import RenderGreenZone from './green-zone';
 import './index.scss';
 
 interface Props {
-  artery: ArterySpec.Artery;
-  setActiveNode: (node?: ArterySpec.Node) => void;
+  artery: Artery;
+  setActiveNode: (node?: Node) => void;
   onChange: (artery: Artery) => void;
-  activeNode?: ArterySpec.Node;
-  className?: string;
+  activeNode?: Node;
   plugins?: Plugins;
-  emptyChildrenPlaceholder?: EmptyChildPlaceholder;
+  className?: string;
+  genNodeID: () => string;
   isNodeSupportChildren?: (parent: NodeWithoutChild) => Promise<boolean>;
   onDropFile?: (file: File) => Promise<string>;
-  genNodeID: () => string;
 }
 
 const ALL_ELEMENTS = new Map();
@@ -34,7 +32,6 @@ function Simulator({
   setActiveNode,
   activeNode,
   genNodeID,
-  emptyChildrenPlaceholder,
   isNodeSupportChildren,
   onDropFile,
   onChange,
@@ -53,7 +50,18 @@ function Simulator({
   }
 
   return (
-    <ArteryCtx.Provider value={{ artery, rootNodeID: artery.node.id, activeNode, setActiveNode }}>
+    <ArteryCtx.Provider
+      value={{
+        artery,
+        rootNodeID: artery.node.id,
+        activeNode,
+        setActiveNode,
+        isNodeSupportChildren,
+        onDropFile,
+        onChange,
+        genNodeID,
+      }}
+    >
       <IndicatorCTX.Provider
         value={{
           setGreenZone: optimizedSetGreenZone,
@@ -64,20 +72,16 @@ function Simulator({
         }}
       >
         <AllElementsCTX.Provider value={ALL_ELEMENTS}>
-          <ActionsCtx.Provider
-            value={{ emptyChildrenPlaceholder, isNodeSupportChildren, onDropFile, onChange, genNodeID }}
-          >
-            <div className={cs('artery-simulator-root', className)}>
-              <Background
-                onReport={setReport}
-                artery={artery}
-                plugins={plugins}
-                scrollPosition={scrollPosition}
-              />
-              {report && <Foreground report={report} onScroll={setScrollPosition} />}
-              {isShowIndicator && greenZone && <RenderGreenZone greenZone={greenZone} />}
-            </div>
-          </ActionsCtx.Provider>
+          <div className={cs('artery-simulator-root', className)}>
+            <Background
+              onReport={setReport}
+              artery={artery}
+              plugins={plugins}
+              scrollPosition={scrollPosition}
+            />
+            {report && <Foreground report={report} onScroll={setScrollPosition} />}
+            {isShowIndicator && greenZone && <RenderGreenZone greenZone={greenZone} />}
+          </div>
         </AllElementsCTX.Provider>
       </IndicatorCTX.Provider>
     </ArteryCtx.Provider>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-/* tslint:disable:no-empty */
+// eslint-disable-next-line
 function noop() {}
 
 export const AllElementsCTX = React.createContext<Map<HTMLElement, boolean>>(new Map());

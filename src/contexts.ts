@@ -1,12 +1,16 @@
 import React from 'react';
 import { Artery, Node } from '@one-for-all/artery';
-import { EmptyChildPlaceholder, GreenZone, NodeWithoutChild } from './types';
+import { GreenZone, NodeWithoutChild } from './types';
 
 interface ArteryContext {
   artery: Artery;
   rootNodeID: string;
   activeNode?: Node;
   setActiveNode: (node?: Node) => void;
+  isNodeSupportChildren?: (node: NodeWithoutChild) => Promise<boolean>;
+  onDropFile?: (file: File) => Promise<string>;
+  onChange: (artery: Artery) => void;
+  genNodeID: () => string;
 }
 
 export const ArteryCtx = React.createContext<ArteryContext>({
@@ -15,6 +19,8 @@ export const ArteryCtx = React.createContext<ArteryContext>({
   artery: { node: { type: 'html-element', name: 'div' } },
   setActiveNode: () => {},
   rootNodeID: '',
+  onChange: () => {},
+  genNodeID: () => 'gen_node_id_method_default_value_and_do_not_use_this',
 });
 
 interface IndicatorContext {
@@ -30,17 +36,4 @@ export const IndicatorCTX = React.createContext<IndicatorContext>({
   setDraggingNodeID: () => {},
   setGreenZone: () => {},
   setShowIndicator: () => {},
-});
-
-interface ActionsContext {
-  emptyChildrenPlaceholder?: EmptyChildPlaceholder;
-  isNodeSupportChildren?: (node: NodeWithoutChild) => Promise<boolean>;
-  onDropFile?: (file: File) => Promise<string>;
-  onChange: (artery: Artery) => void;
-  genNodeID: () => string;
-}
-
-export const ActionsCtx = React.createContext<ActionsContext>({
-  onChange: () => {},
-  genNodeID: () => 'gen_node_id_method_default_value_and_do_not_use_this',
 });

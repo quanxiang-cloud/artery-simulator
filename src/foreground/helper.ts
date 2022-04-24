@@ -60,21 +60,20 @@ interface DropNodeParams {
 }
 
 export function dropNode({ root, node, hoveringNodeID, position }: DropNodeParams): Node | undefined {
-  let _root: Node | undefined = root;
   if (position === 'right' || position === 'bottom') {
-    return insertAfter(_root, hoveringNodeID, node);
+    return insertAfter(root, hoveringNodeID, node);
   }
 
   if (position === 'left' || position === 'top') {
-    return insertBefore(_root, hoveringNodeID, node);
+    return insertBefore(root, hoveringNodeID, node);
   }
 
   if (position === 'inner-right' || position === 'inner-bottom') {
-    return appendChild(_root, hoveringNodeID, node);
+    return appendChild(root, hoveringNodeID, node);
   }
 
   if (position === 'inner-left' || position === 'inner-top' || position === 'inner') {
-    return insertAt(_root, hoveringNodeID, 0, node);
+    return insertAt(root, hoveringNodeID, 0, node);
   }
 
   console.error('unimplemented drop position:', position);

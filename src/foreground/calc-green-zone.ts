@@ -1,4 +1,4 @@
-import { ContourNode, Position } from '../types';
+import { Position } from '../types';
 
 // interface Cursor {
 //   x: number;

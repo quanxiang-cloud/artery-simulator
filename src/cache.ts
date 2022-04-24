@@ -1,4 +1,4 @@
-import { NodeWithoutChild } from "./types";
+import { NodeWithoutChild } from './types';
 
 const isNodeSupportChildrenCache: Map<string, boolean> = new Map();
 
@@ -9,7 +9,10 @@ export function cacheIsNodeSupportChildren(node: NodeWithoutChild, isSupport: bo
   }
 
   if (node.type === 'react-component') {
-    isNodeSupportChildrenCache.set(`react_component:${node.packageName}:${node.packageVersion}:${node.exportName}`, isSupport);
+    isNodeSupportChildrenCache.set(
+      `react_component:${node.packageName}:${node.packageVersion}:${node.exportName}`,
+      isSupport,
+    );
   }
 }
 
@@ -19,7 +22,9 @@ export function getIsNodeSupportCache(node: NodeWithoutChild): boolean {
   }
 
   if (node.type === 'react-component') {
-    return !!isNodeSupportChildrenCache.get(`react_component:${node.packageName}:${node.packageVersion}:${node.exportName}`);
+    return !!isNodeSupportChildrenCache.get(
+      `react_component:${node.packageName}:${node.packageVersion}:${node.exportName}`,
+    );
   }
 
   return false;

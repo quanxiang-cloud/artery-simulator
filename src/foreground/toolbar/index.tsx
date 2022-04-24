@@ -1,9 +1,8 @@
 import React, { useContext, useRef } from 'react';
 import { usePopper } from '@one-for-all/headless-ui';
-import { ContourNode } from '../../types';
-import { ActionsCtx, ArteryCtx } from '../../contexts';
+import { ArteryCtx } from '../../contexts';
 import ParentNodes from './parent-nodes';
-import { deleteByID, findNodeByID, insertAfter } from '@one-for-all/artery-utils';
+import { deleteByID, insertAfter } from '@one-for-all/artery-utils';
 import Icon from '@one-for-all/icon';
 import duplicateNode from './duplicate-node';
 import { useActiveContourNode } from './use-active-contour-node';
@@ -22,13 +21,12 @@ const modifiers = [
 function ContourNodeToolbar(): JSX.Element | null {
   const { activeNode } = useContext(ArteryCtx);
   const contourNode = useActiveContourNode();
-  const { referenceRef, Popper, handleMouseEnter, handleMouseLeave, handleClick } = usePopper();
+  const { referenceRef, Popper, handleMouseEnter, handleMouseLeave } = usePopper();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { onChange, genNodeID } = useContext(ActionsCtx);
-  const { artery, setActiveNode } = useContext(ArteryCtx);
+  const { artery, setActiveNode, onChange, genNodeID } = useContext(ArteryCtx);
   const style = useToolbarStyle(contourNode);
 
-  function handleDelete() {
+  function handleDelete(): void {
     if (!contourNode) {
       return;
     }
@@ -38,7 +36,7 @@ function ContourNodeToolbar(): JSX.Element | null {
     setActiveNode(undefined);
   }
 
-  function handleDuplicate() {
+  function handleDuplicate(): void {
     if (!activeNode) {
       return;
     }

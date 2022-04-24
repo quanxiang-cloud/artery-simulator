@@ -7,10 +7,6 @@ import arteryForTestingSimulator from './artery-for-testing-simulator';
 import ArterySpec from '@one-for-all/artery';
 import { isSupportChildren } from './helper';
 
-function Placeholder(): JSX.Element {
-  return <div>请拖拽元素到此处！</div>;
-}
-
 function genNodeID(): string {
   return nanoid();
 }
@@ -28,7 +24,6 @@ function SimulatorInExample(): JSX.Element {
       setActiveNode={setActiveNode}
       onChange={setArtery}
       isNodeSupportChildren={isSupportChildren}
-      emptyChildrenPlaceholder={Placeholder}
     />
   );
 }

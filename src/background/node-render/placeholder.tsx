@@ -1,7 +1,7 @@
 import type { HTMLNode, ReactComponentNode } from '@one-for-all/artery-renderer';
 import React, { useContext, useEffect, useState } from 'react';
 import { cacheIsNodeSupportChildren, getIsNodeSupportCache } from '../../cache';
-import { ActionsCtx } from '../../contexts';
+import { ArteryCtx } from '../../contexts';
 import { NodeWithoutChild } from '../../types';
 
 interface Props {
@@ -21,8 +21,12 @@ function getParentNode(parent: HTMLNode | ReactComponentNode): NodeWithoutChild 
   };
 }
 
+function EmptyPlaceholder(): JSX.Element {
+  return <div>请拖拽组件到此处！</div>;
+}
+
 function Placeholder({ parent }: Props): JSX.Element | null {
-  const { emptyChildrenPlaceholder, isNodeSupportChildren } = useContext(ActionsCtx);
+  const { isNodeSupportChildren } = useContext(ArteryCtx);
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
@@ -53,14 +57,14 @@ function Placeholder({ parent }: Props): JSX.Element | null {
     };
   }, []);
 
-  if (!emptyChildrenPlaceholder || !shouldRender) {
+  if (!shouldRender) {
     return null;
   }
 
   return React.createElement(
     'div',
     { className: 'placeholder-for-empty-children' },
-    React.createElement(emptyChildrenPlaceholder),
+    React.createElement(EmptyPlaceholder),
   );
 }
 
