@@ -51,7 +51,7 @@ function ContourNodeToolbar(): JSX.Element | null {
     // setActiveNode(newNode);
   }
 
-  if (!activeNode || !contourNode) {
+  if (!activeNode || !contourNode || activeNode.id === artery.node.id) {
     return null;
   }
 

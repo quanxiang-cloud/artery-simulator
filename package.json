@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "lib/index.d.ts"
+    "lib/*.d.ts"
   ],
   "scripts": {
     "build": "tsc",

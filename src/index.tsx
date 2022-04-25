@@ -27,14 +27,16 @@ const ALL_ELEMENTS = new Map();
 
 function Simulator({
   artery,
-  plugins,
+  onChange,
+
   className,
   setActiveNode,
   activeNode,
+
+  plugins,
   genNodeID,
   isNodeSupportChildren,
   onDropFile,
-  onChange,
 }: Props): JSX.Element {
   const [report, setReport] = useState<SimulatorReport>();
   const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
