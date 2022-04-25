@@ -49,7 +49,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "jest": "27.4.7",
     "rollup": "2.66.0",
-    "rollup-plugin-esbuild": "^4.6.0",
+    "rollup-plugin-esbuild-ts": "^4.8.2",
     "rollup-plugin-styles": "^3.14.1",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.44.0",

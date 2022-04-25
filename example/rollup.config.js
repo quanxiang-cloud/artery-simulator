@@ -1,6 +1,6 @@
 import commonjs from '@rollup/plugin-commonjs';
 import styles from 'rollup-plugin-styles';
-import esbuild from 'rollup-plugin-esbuild';
+import esbuild from 'rollup-plugin-esbuild-ts';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [
