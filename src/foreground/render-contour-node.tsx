@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useRef } from 'react';
 import cs from 'classnames';
 import { throttle } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
@@ -26,9 +26,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   const style = useContourNodeStyle(contourNode);
   const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
     useContext(IndicatorCTX);
-  const currentArteryNode = useMemo(() => {
-    return findNodeByID(artery.node, contourNode.id);
-  }, [contourNode]);
+  const currentArteryNodeRef = useRef<Node>();
 
   const handleDragOver = throttle((e) => {
     if (draggingNodeID === contourNode.id) {
@@ -44,7 +42,8 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       x: e.clientX,
       y: e.clientY,
       rect: contourNode.raw,
-      supportInner: currentArteryNode ? getIsNodeSupportCache(currentArteryNode as NodeWithoutChild) : false,
+      supportInner: currentArteryNodeRef.current ?
+        !!getIsNodeSupportCache(currentArteryNodeRef.current as NodeWithoutChild) : false,
     });
     setGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
 
@@ -110,14 +109,23 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
         // todo this has no affect, fix it!
         e.dataTransfer.effectAllowed = 'move';
       }}
-      onDragEnd={() => setDraggingNodeID()}
+      onDragEnd={() => {
+        setDraggingNodeID();
+        setGreenZone(undefined);
+      }}
       onDrag={preventDefault}
       onDragOver={(e) => {
         preventDefault(e);
         handleDragOver(e);
         return false;
       }}
-      onDragEnter={preventDefault}
+      onDragEnter={(e) => {
+        preventDefault(e);
+
+        currentArteryNodeRef.current = findNodeByID(artery.node, contourNode.id);
+
+        return false;
+      }}
       onDrop={(e) => {
         e.stopPropagation();
         e.preventDefault();

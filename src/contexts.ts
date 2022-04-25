@@ -11,6 +11,7 @@ interface ArteryContext {
   onDropFile?: (file: File) => Promise<string>;
   onChange: (artery: Artery) => void;
   genNodeID: () => string;
+  immutableNode: Immutable.Collection<unknown, unknown>
 }
 
 export const ArteryCtx = React.createContext<ArteryContext>({

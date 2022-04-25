@@ -23,7 +23,7 @@ function Foreground({ report, onScroll }: Props): JSX.Element {
     clearTimeout(timeRef.current);
     timeRef.current = window.setTimeout(() => {
       setScrolling(false);
-    }, 50);
+    }, 500);
   }
 
   return (

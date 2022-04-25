@@ -4452,17 +4452,6 @@ rollup-plugin-esbuild-ts@^4.8.2:
     joycon "^3.0.1"
     jsonc-parser "^3.0.0"
 
-rollup-plugin-esbuild@^4.6.0:
-  version "4.9.1"
-  resolved "https://registry.npmmirror.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.9.1.tgz#369d137e2b1542c8ee459495fd4f10de812666aa"
-  integrity sha512-qn/x7Wz9p3Xnva99qcb+nopH0d2VJwVnsxJTGEg+Sh2Z3tqQl33MhOwzekVo1YTKgv+yAmosjcBRJygMfGrtLw==
-  dependencies:
-    "@rollup/pluginutils" "^4.1.1"
-    debug "^4.3.3"
-    es-module-lexer "^0.9.3"
-    joycon "^3.0.1"
-    jsonc-parser "^3.0.0"
-
 rollup-plugin-styles@^3.14.1:
   version "3.14.1"
   resolved "https://registry.npmmirror.com/rollup-plugin-styles/-/rollup-plugin-styles-3.14.1.tgz#8a9d13885ac5c82f513099f567b94cff9379728c"

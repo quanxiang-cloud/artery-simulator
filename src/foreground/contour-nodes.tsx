@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { getNodeParentIDs } from '@one-for-all/artery-utils';
+import { parent } from '@one-for-all/artery-utils';
 
 import { ContourNode, VisibleNode } from '../types';
 import { ArteryCtx, ContourNodesContext } from '../contexts';
@@ -12,7 +12,7 @@ interface Props {
 }
 
 function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<ContourNode> {
-  const { artery } = useContext(ArteryCtx);
+  const { immutableNode } = useContext(ArteryCtx);
   const [contourNodes, setContourNodes] = useState<Array<ContourNode>>([]);
 
   useEffect(() => {
@@ -20,17 +20,16 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
       return;
     }
 
+    const n1 = performance.now();
+
     const _contourNodes = nodes
       .map((node) => {
-        const parentIDs = getNodeParentIDs(artery.node, node.id);
-        if (!parentIDs) {
-          return false;
-        }
-
+        // todo performance issue
+        const parentKeyPath = parent(immutableNode, node.id);
         const contour: ContourNode = {
           ...node,
-          nodePath: parentIDs,
-          depth: parentIDs.length,
+          // depth: parentIDs.length,
+          depth: parentKeyPath?.size || 0,
           area: node.relativeRect.height * node.relativeRect.width,
         };
 
@@ -39,6 +38,8 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
       .filter((n): n is ContourNode => !!n);
 
     setContourNodes(_contourNodes);
+    const n2 = performance.now();
+    console.log('calc nodes cost:', n2 - n1);
   }, [nodes, isScrolling]);
 
   return contourNodes;

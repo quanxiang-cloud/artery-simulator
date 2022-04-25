@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { fromJS } from 'immutable';
 import cs from 'classnames';
 import { Plugins } from '@one-for-all/artery-renderer';
 import { Artery, Node } from '@one-for-all/artery';
@@ -43,6 +44,7 @@ function Simulator({
   const [greenZone, setGreenZone] = useState<GreenZone>();
   const [isShowIndicator, setShowIndicator] = useState(false);
   const [draggingNodeID, setDraggingNodeID] = useState<string>();
+  const immutableNode = useMemo(() => fromJS(artery.node), [artery.node]);
 
   // todo fix this
   function optimizedSetGreenZone(newZone?: GreenZone): void {
@@ -62,6 +64,7 @@ function Simulator({
         onDropFile,
         onChange,
         genNodeID,
+        immutableNode,
       }}
     >
       <IndicatorCTX.Provider
