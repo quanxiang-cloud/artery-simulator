@@ -21,7 +21,7 @@ function ReactComponentNodeRender({ node, ctx }: Props): React.ReactElement | nu
     return React.createElement(
       'div',
       wrapperProps,
-      React.createElement(nodeComponent, nodeProps, React.createElement(Placeholder)),
+      React.createElement(nodeComponent, nodeProps, React.createElement(Placeholder, { parent: node })),
     );
   }
 
