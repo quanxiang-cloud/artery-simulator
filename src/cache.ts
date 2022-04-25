@@ -16,13 +16,13 @@ export function cacheIsNodeSupportChildren(node: NodeWithoutChild, isSupport: bo
   }
 }
 
-export function getIsNodeSupportCache(node: NodeWithoutChild): boolean {
+export function getIsNodeSupportCache(node: NodeWithoutChild): boolean | undefined {
   if (node.type === 'html-element') {
-    return !!isNodeSupportChildrenCache.get(`html_node:${node.name}`);
+    return isNodeSupportChildrenCache.get(`html_node:${node.name}`);
   }
 
   if (node.type === 'react-component') {
-    return !!isNodeSupportChildrenCache.get(
+    return isNodeSupportChildrenCache.get(
       `react_component:${node.packageName}:${node.packageVersion}:${node.exportName}`,
     );
   }
