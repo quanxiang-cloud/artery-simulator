@@ -35,6 +35,11 @@
   border-style: solid;
 }
 
+.contour-node--hover-as-parent {
+  border-color: #f85900;
+  border-style: dashed;
+}
+
 .green-zone-indicator {
   &:not(.green-zone-indicator--root) {
     background-color: #0080005c;

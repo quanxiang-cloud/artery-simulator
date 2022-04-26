@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect, useMemo } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import React, { useState, useEffect, useMemo } from 'react';
 import { parent } from '@one-for-all/artery-utils';
 
 import { ContourNode, VisibleNode } from '../types';
-import { ArteryCtx, ContourNodesContext } from '../contexts';
 import RenderContourNode from './render-contour-node';
 import Toolbar from './toolbar';
+import { contourNodesState, immutableNodeState } from '../atoms';
 
 interface Props {
   nodes: VisibleNode[];
@@ -12,7 +13,7 @@ interface Props {
 }
 
 function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<ContourNode> {
-  const { immutableNode } = useContext(ArteryCtx);
+  const [immutableNode] = useRecoilState(immutableNodeState);
   const [contourNodes, setContourNodes] = useState<Array<ContourNode>>([]);
   const nodeDepthCache = useMemo(() => {
     return new Map<string, number>();
@@ -57,15 +58,25 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
 function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
   const contourNodes = useContourNodes(nodes, scrolling);
 
+  const setContourNodesState = useSetRecoilState(contourNodesState);
+  useEffect(() => {
+    setContourNodesState(contourNodes);
+  }, [contourNodes]);
+
   return (
-    <ContourNodesContext.Provider value={contourNodes}>
+    <>
       <div className="contour-nodes">
         {contourNodes.map((contour) => {
-          return <RenderContourNode key={contour.id} contourNode={contour} />;
+          return (
+            <RenderContourNode
+              key={contour.id}
+              contourNode={contour}
+            />
+          );
         })}
       </div>
       <Toolbar />
-    </ContourNodesContext.Provider>
+    </>
   );
 }
 

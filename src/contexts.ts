@@ -1,6 +1,6 @@
 import React from 'react';
 import { Artery, Node } from '@one-for-all/artery';
-import { ContourNode, GreenZone, NodeWithoutChild } from './types';
+import { NodeWithoutChild } from './types';
 
 interface ArteryContext {
   artery: Artery;
@@ -11,7 +11,6 @@ interface ArteryContext {
   onDropFile?: (file: File) => Promise<string>;
   onChange: (artery: Artery) => void;
   genNodeID: () => string;
-  immutableNode: Immutable.Collection<unknown, unknown>
 }
 
 export const ArteryCtx = React.createContext<ArteryContext>({
@@ -23,20 +22,3 @@ export const ArteryCtx = React.createContext<ArteryContext>({
   onChange: () => {},
   genNodeID: () => 'gen_node_id_method_default_value_and_do_not_use_this',
 });
-
-interface IndicatorContext {
-  draggingNodeID?: string;
-  setDraggingNodeID: (nodeID?: string) => void;
-  greenZone?: GreenZone;
-  setGreenZone: (greenZone?: GreenZone) => void;
-  setShowIndicator: (isShow: boolean) => void;
-  // showIndicator: boolean;
-}
-
-export const IndicatorCTX = React.createContext<IndicatorContext>({
-  setDraggingNodeID: () => {},
-  setGreenZone: () => {},
-  setShowIndicator: () => {},
-});
-
-export const ContourNodesContext = React.createContext<Array<ContourNode>>([]);

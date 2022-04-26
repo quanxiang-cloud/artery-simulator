@@ -1,11 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import { ContourNode } from '../../types';
-import { ArteryCtx, ContourNodesContext } from '../../contexts';
+import { ArteryCtx } from '../../contexts';
+import { useRecoilState } from 'recoil';
+import { contourNodesState } from '../../atoms';
 
 export function useActiveContourNode(): ContourNode | undefined {
   const { activeNode } = useContext(ArteryCtx);
-  const contourNodes = useContext(ContourNodesContext);
   const [activeContourNode, setActiveNode] = useState<ContourNode>();
+
+  const [contourNodes] = useRecoilState(contourNodesState);
 
   useEffect(() => {
     if (!activeNode) {

@@ -1,18 +1,20 @@
 import React, { useRef, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 import ContourNodes from './contour-nodes';
 import type { SimulatorReport } from '../types';
 
 import './index.scss';
+import { scrollPositionState } from '../atoms';
 
 interface Props {
   report: SimulatorReport;
-  onScroll: (position: { x: number; y: number }) => void;
 }
 
-function Foreground({ report, onScroll }: Props): JSX.Element {
+function Foreground({ report }: Props): JSX.Element {
   const timeRef = useRef<number>();
   const [scrolling, setScrolling] = useState(false);
+  const onScroll = useSetRecoilState(scrollPositionState);
 
   function handleScroll(e: React.UIEvent<HTMLDivElement>): void {
     // @ts-ignore

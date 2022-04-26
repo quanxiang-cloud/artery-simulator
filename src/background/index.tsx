@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { Plugins, useBootResult } from '@one-for-all/artery-renderer';
 import { Artery } from '@one-for-all/artery';
 
@@ -6,18 +7,19 @@ import NodeRender from './node-render';
 import useVisibleObserver from './use-visible-observer';
 import { VisibleObserverCTX } from './contexts';
 import type { SimulatorReport } from '../types';
+import { scrollPositionState } from '../atoms';
 
 interface Props {
   artery: Artery;
   plugins?: Plugins;
   onReport: (report: SimulatorReport) => void;
-  scrollPosition: { x: number; y: number };
 }
 
-function Background({ artery, plugins, onReport, scrollPosition }: Props): JSX.Element | null {
+function Background({ artery, plugins, onReport }: Props): JSX.Element | null {
   const { ctx, rootNode } = useBootResult(artery, plugins) || {};
   const backgroundRef = useRef<HTMLDivElement>(null);
   const visibleObserver = useVisibleObserver(onReport, backgroundRef.current);
+  const [scrollPosition] = useRecoilState(scrollPositionState);
 
   useEffect(() => {
     if (!backgroundRef.current) {

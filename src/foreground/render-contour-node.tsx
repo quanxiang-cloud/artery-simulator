@@ -6,10 +6,12 @@ import { findNodeByID } from '@one-for-all/artery-utils';
 
 import useContourNodeStyle from './use-active-contour-node';
 import { calcHoverPosition } from './calc-green-zone';
-import { ArteryCtx, IndicatorCTX } from '../contexts';
+import { ArteryCtx } from '../contexts';
 import { moveNode, dropNode, jsonParse } from './helper';
 import { getIsNodeSupportCache } from '../cache';
-import type { ContourNode, NodeWithoutChild } from '../types';
+import type { ContourNode, GreenZone, NodeWithoutChild } from '../types';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { draggingNodeIDState, greenZoneState, hoveringParentIDState, isDraggingOverState } from '../atoms';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -22,18 +24,29 @@ interface Props {
 }
 
 function RenderContourNode({ contourNode }: Props): JSX.Element {
+  const [hoveringParentID] = useRecoilState(hoveringParentIDState);
   const { onChange, rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
   const style = useContourNodeStyle(contourNode);
-  const { setGreenZone, greenZone, setShowIndicator, setDraggingNodeID, draggingNodeID } =
-    useContext(IndicatorCTX);
+  // const { setShowIndicator } =
+  //   useContext(IndicatorCTX);
   const currentArteryNodeRef = useRef<Node>();
+  const [greenZone, setGreenZone] = useRecoilState(greenZoneState);
+  const [draggingNodeID, setDraggingNodeID] = useRecoilState(draggingNodeIDState);
+  const setIsDraggingOver = useSetRecoilState(isDraggingOverState);
+
+  // todo fix this
+  function optimizedSetGreenZone(newZone?: GreenZone): void {
+    if (newZone?.hoveringNodeID !== greenZone?.hoveringNodeID || newZone?.position !== greenZone?.position) {
+      setGreenZone(newZone);
+    }
+  }
 
   const handleDragOver = throttle((e) => {
     if (draggingNodeID === contourNode.id) {
       return;
     }
 
-    setShowIndicator(true);
+    setIsDraggingOver(true);
 
     // TODO bug
     // if hovering node is draggingNode's parent
@@ -45,7 +58,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       supportInner: currentArteryNodeRef.current ?
         !!getIsNodeSupportCache(currentArteryNodeRef.current as NodeWithoutChild) : false,
     });
-    setGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
+    optimizedSetGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
 
     return false;
   });
@@ -59,7 +72,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
 
   // todo give this function a better name
   function handleDrop(e: React.DragEvent<HTMLElement>): Artery | undefined {
-    setShowIndicator(false);
+    setIsDraggingOver(false);
 
     if (!greenZone) {
       return;
@@ -110,7 +123,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
         e.dataTransfer.effectAllowed = 'move';
       }}
       onDragEnd={() => {
-        setDraggingNodeID();
+        setDraggingNodeID('');
         setGreenZone(undefined);
       }}
       onDrag={preventDefault}
@@ -142,6 +155,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       className={cs('contour-node', {
         'contour-node--root': rootNodeID === contourNode.id,
         'contour-node--active': activeNode?.id === contourNode.id,
+        'contour-node--hover-as-parent': hoveringParentID === contourNode.id,
       })}
     />
   );
