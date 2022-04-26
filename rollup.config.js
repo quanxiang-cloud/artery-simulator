@@ -7,6 +7,9 @@ import replace from '@rollup/plugin-replace';
 import getOutput from './get-common-output';
 import packageJSON from './package.json';
 
+const NODE_ENV = process.env.NODE_ENV === 'production' ? 'production' : 'dev';
+const isProduction = NODE_ENV === 'production';
+
 export default {
   input: 'src/index.tsx',
   output: getOutput(packageJSON.name, packageJSON.version),
@@ -31,14 +34,15 @@ export default {
       // All options are optional
       include: /\.[jt]sx?$/, // default, inferred from `loaders` option
       exclude: /node_modules/, // default
-      sourceMap: true, // default
-      minify: process.env.NODE_ENV === 'production',
+      sourceMap: isProduction ? false : true, // default
+      minify: isProduction,
       target: 'es2017', // default, or 'es20XX', 'esnext'
       jsx: 'transform', // default, or 'preserve'
       jsxFactory: 'React.createElement',
       jsxFragment: 'React.Fragment',
       // Like @rollup/plugin-replace
       define: {
+        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'dev'),
         __VERSION__: '"x.y.z"',
       },
       tsconfig: 'tsconfig.json', // default

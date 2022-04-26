@@ -6,6 +6,7 @@ import ChildrenRender from './children-render';
 import PathContext from './path-context';
 import useHTMLNodeProps from './hooks/use-html-node-props';
 import Placeholder from './placeholder';
+import { useSupportChildrenCheck } from './use-support-children-check';
 
 interface Props {
   node: HTMLNode;
@@ -15,6 +16,7 @@ interface Props {
 function HTMLNodeRender({ node, ctx }: Props): React.ReactElement | null {
   const currentPath = useContext(PathContext);
   const props = useHTMLNodeProps(node, ctx);
+  useSupportChildrenCheck(node);
 
   if (!node.name) {
     logger.error(

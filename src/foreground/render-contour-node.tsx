@@ -55,8 +55,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       x: e.clientX,
       y: e.clientY,
       rect: contourNode.raw,
-      supportInner: currentArteryNodeRef.current ?
-        !!getIsNodeSupportCache(currentArteryNodeRef.current as NodeWithoutChild) : false,
+      supportInner: !!getIsNodeSupportCache(currentArteryNodeRef.current as NodeWithoutChild),
     });
     optimizedSetGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
 

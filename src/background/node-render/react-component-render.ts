@@ -4,6 +4,7 @@ import { useNodeComponent, CTX, ReactComponentNode } from '@one-for-all/artery-r
 import ChildrenRender from './children-render';
 import useComponentNodeProps from './hooks/use-component-props';
 import Placeholder from './placeholder';
+import { useSupportChildrenCheck } from './use-support-children-check';
 
 interface Props {
   node: ReactComponentNode;
@@ -13,6 +14,8 @@ interface Props {
 function ReactComponentNodeRender({ node, ctx }: Props): React.ReactElement | null {
   const { nodeProps, wrapperProps } = useComponentNodeProps(node, ctx);
   const nodeComponent = useNodeComponent(node, ctx.plugins);
+  useSupportChildrenCheck(node);
+
   if (!nodeComponent) {
     return null;
   }

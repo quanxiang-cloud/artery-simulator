@@ -41,7 +41,6 @@ interface GetPositionParam {
 export function calcHoverPosition({ x, rect, supportInner }: GetPositionParam): Position {
   const leftDistance = Math.abs(x - rect.left);
   const rightDistance = Math.abs(x - rect.right);
-
   if (!supportInner) {
     return leftDistance < rightDistance ? 'left' : 'right';
   }
