@@ -10,9 +10,7 @@ function useObserverCallback(
 
   return (entries) => {
     entries.forEach(({ isIntersecting, target }) => {
-      if (allElements.has(target as HTMLElement)) {
-        allElements.set(target as HTMLElement, isIntersecting);
-      }
+      allElements.set(target as HTMLElement, isIntersecting);
     });
 
     setVisibleNodes(
@@ -36,6 +34,7 @@ function useRadarRef(
     const radar = new ElementsRadar(root);
     radarRef.current = radar;
     const subscription = radar.listen((report) => {
+      const n1 = performance.now();
       // TODO: batch read this for preventing reflow
       const deltaX = root.scrollLeft || 0;
       const deltaY = root.scrollTop || 0;
@@ -56,8 +55,10 @@ function useRadarRef(
           };
         },
       );
-
       onReport({ visibleNodes, areaHeight: scrollHeight, areaWidth: scrollWidth });
+      const n2 = performance.now();
+
+      console.log('calc visible nodes cost:', n2 - n1);
     });
 
     return () => {
@@ -75,7 +76,7 @@ function useVisibleObserver(
   const [latestVisibleElements, setLatesVisibleElements] = useState<HTMLElement[]>([]);
   const radarRef = useRadarRef(onReport, root);
   const visibleObserverRef = useRef<IntersectionObserver>(
-    new IntersectionObserver(useObserverCallback(setLatesVisibleElements)),
+    new IntersectionObserver(useObserverCallback(setLatesVisibleElements), { root }),
   );
 
   useEffect(() => {

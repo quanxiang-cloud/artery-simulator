@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cs from 'classnames';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { fromJS } from 'immutable';
@@ -9,10 +9,11 @@ import Background from './background';
 import Foreground from './foreground';
 import { ArteryCtx } from './contexts';
 import { NodeWithoutChild, SimulatorReport } from './types';
-import { AllElementsCTX } from './background/contexts';
+import { AllElementsCTX, VisibleObserverCTX } from './background/contexts';
 import RenderGreenZone from './green-zone';
 import './index.scss';
 import { greenZoneState, immutableNodeState, isDraggingOverState } from './atoms';
+import useVisibleObserver from './background/use-visible-observer';
 
 export interface Props {
   artery: Artery;
@@ -46,7 +47,9 @@ function Simulator({
   const setImmutableNode = useSetRecoilState(immutableNodeState);
   // todo move this into RenderGreenZone
   const [greenZone] = useRecoilState(greenZoneState);
+  const backgroundRef = useRef<HTMLDivElement>(null);
 
+  const visibleObserver = useVisibleObserver(setReport, backgroundRef.current);
   useEffect(() => {
     setImmutableNode(fromJS(artery.node));
   }, [artery.node]);
@@ -65,15 +68,16 @@ function Simulator({
       }}
     >
       <AllElementsCTX.Provider value={ALL_ELEMENTS}>
-        <div className={cs('artery-simulator-root', className)}>
-          <Background
-            onReport={setReport}
-            artery={artery}
-            plugins={plugins}
-          />
-          {report && <Foreground report={report} />}
-          {isDraggingOver && greenZone && <RenderGreenZone greenZone={greenZone} />}
-        </div>
+        <VisibleObserverCTX.Provider value={visibleObserver}>
+          <div ref={backgroundRef} className={cs('artery-simulator-root', className)}>
+            <Background
+              artery={artery}
+              plugins={plugins}
+            />
+            {report && <Foreground report={report} />}
+            {isDraggingOver && greenZone && <RenderGreenZone greenZone={greenZone} />}
+          </div>
+        </VisibleObserverCTX.Provider>
       </AllElementsCTX.Provider>
     </ArteryCtx.Provider>
   );

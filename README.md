@@ -16,3 +16,4 @@
 - 优化性能
 - dragging handle
 - 优化 `请拖拽组件到此处` 的提示
+- bug: 删除元素后，在没有滚动条的情况下 latestVisibleElements 没有更新

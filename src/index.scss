@@ -1,19 +1,24 @@
 .artery-simulator-root {
   position: relative;
+  overflow: auto;
+
+  outline: 1px dashed cadetblue;
 
   * {
     box-sizing: border-box;
   }
 
-  .simulator-background,
-  .simulator-foreground {
-    position: absolute;
-    overflow: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .simulator-background {
+    * {
+      pointer-events: none;
+    }
+    // position: absolute;
+    // overflow: auto;
+    // top: 0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
 
-    outline: 1px dashed cadetblue;
+    // outline: 1px dashed cadetblue;
   }
 }

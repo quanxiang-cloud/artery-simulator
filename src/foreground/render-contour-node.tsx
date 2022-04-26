@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import cs from 'classnames';
 import { throttle } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
-import { findNodeByID } from '@one-for-all/artery-utils';
+import { byArbitrary, findNodeByID } from '@one-for-all/artery-utils';
 
 import useContourNodeStyle from './use-active-contour-node';
 import { calcHoverPosition } from './calc-green-zone';
@@ -11,7 +11,7 @@ import { moveNode, dropNode, jsonParse } from './helper';
 import { getIsNodeSupportCache } from '../cache';
 import type { ContourNode, GreenZone, NodeWithoutChild } from '../types';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { draggingNodeIDState, greenZoneState, hoveringParentIDState, isDraggingOverState } from '../atoms';
+import { draggingNodeIDState, greenZoneState, hoveringParentIDState, immutableNodeState, isDraggingOverState } from '../atoms';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -33,6 +33,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   const [greenZone, setGreenZone] = useRecoilState(greenZoneState);
   const [draggingNodeID, setDraggingNodeID] = useRecoilState(draggingNodeIDState);
   const setIsDraggingOver = useSetRecoilState(isDraggingOverState);
+  const [immutableNode] = useRecoilState(immutableNodeState);
 
   // todo fix this
   function optimizedSetGreenZone(newZone?: GreenZone): void {
@@ -63,9 +64,14 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   });
 
   function handleClick(): void {
-    const arteryNode = findNodeByID(artery.node, contourNode.id);
-    if (arteryNode) {
-      setActiveNode(arteryNode);
+    const keyPath = byArbitrary(immutableNode, contourNode.id);
+    if (!keyPath) {
+      return;
+    }
+
+    if (immutableNode.hasIn(keyPath)) {
+      // @ts-ignore
+      setActiveNode(immutableNode.getIn(keyPath).toJS());
     }
   }
 

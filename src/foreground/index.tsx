@@ -29,13 +29,13 @@ function Foreground({ report }: Props): JSX.Element {
   }
 
   return (
-    <div className="simulator-foreground" onScroll={handleScroll}>
-      <div
-        className="foreground-scroll"
-        style={{ height: `${report.areaHeight}px`, width: `${report.areaWidth}px` }}
-      />
-      <ContourNodes nodes={report.visibleNodes} scrolling={scrolling} />
-    </div>
+    <ContourNodes nodes={report.visibleNodes} scrolling={scrolling} />
+    // <div className="simulator-foreground" onScroll={handleScroll}>
+    //   <div
+    //     className="foreground-scroll"
+    //     style={{ height: `${report.areaHeight}px`, width: `${report.areaWidth}px` }}
+    //   />
+    // </div>
   );
 }
 
