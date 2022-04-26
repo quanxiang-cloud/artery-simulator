@@ -44,6 +44,7 @@ function ParentNodes({ currentNodeID }: Props): JSX.Element | null {
               setActiveNode(parent);
             }}
           >
+            {/* todo optimize this value */}
             {label || id}
           </span>
         );

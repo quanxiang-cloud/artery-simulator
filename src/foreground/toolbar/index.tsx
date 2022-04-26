@@ -7,6 +7,7 @@ import Icon from '@one-for-all/icon';
 import duplicateNode from './duplicate-node';
 import { useActiveContourNode } from './use-active-contour-node';
 import useToolbarStyle from './use-toolbar-style';
+import { useNodeLabel } from './use-node-label';
 
 const modifiers = [
   {
@@ -21,10 +22,11 @@ const modifiers = [
 function ContourNodeToolbar(): JSX.Element | null {
   const { activeNode } = useContext(ArteryCtx);
   const contourNode = useActiveContourNode();
-  const { referenceRef, Popper, handleMouseEnter, handleMouseLeave } = usePopper();
+  const { referenceRef, Popper, handleMouseEnter, handleMouseLeave } = usePopper<HTMLSpanElement>();
   const containerRef = useRef<HTMLDivElement>(null);
   const { artery, setActiveNode, onChange, genNodeID } = useContext(ArteryCtx);
   const style = useToolbarStyle(contourNode);
+  const activeNodeLabel = useNodeLabel(activeNode);
 
   function handleDelete(): void {
     if (!contourNode) {
@@ -58,14 +60,13 @@ function ContourNodeToolbar(): JSX.Element | null {
   return (
     <div ref={containerRef} className="active-contour-node-toolbar" style={style}>
       <span
-        // @ts-ignore
         ref={referenceRef}
         className="active-contour-node-toolbar__parents"
         // onClick={handleClick()}
         onMouseEnter={handleMouseEnter()}
         onMouseLeave={handleMouseLeave()}
       >
-        {activeNode.label || activeNode.id}
+        {activeNodeLabel}
       </span>
       <span onClick={handleDuplicate} className="active-contour-node-toolbar__action" title="复制">
         <Icon name="content_copy" size={16} />
