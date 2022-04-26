@@ -14,3 +14,4 @@
 ## TODO
 
 - 优化性能
+- dragging handle
