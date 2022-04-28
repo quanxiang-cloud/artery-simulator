@@ -24,7 +24,7 @@ function ParentNodes({ currentNodeID, onParentClick }: Props): JSX.Element | nul
 
     // @ts-ignore
     const _parents: Node[] = parentIDs.map((parentID) => {
-      const keyPath = keyPathById(immutableNode, parentID as string);
+      const keyPath = keyPathById(immutableNode, parentID);
       if (!keyPath) {
         return;
       }
