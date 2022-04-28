@@ -1,5 +1,5 @@
 import { Node } from '@one-for-all/artery';
-import { parentIdPath } from '@one-for-all/artery-utils';
+import { keyPathById, parentIdsSeq } from '@one-for-all/artery-utils';
 import React, { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { hoveringParentIDState, immutableNodeState } from '../../atoms';
@@ -17,13 +17,19 @@ function ParentNodes({ currentNodeID, onParentClick }: Props): JSX.Element | nul
   const setHoveringParentID = useSetRecoilState(hoveringParentIDState);
 
   useEffect(() => {
-    const parentIDs = parentIdPath(immutableNode, currentNodeID);
+    const parentIDs = parentIdsSeq(immutableNode, currentNodeID);
     if (!parentIDs) {
       return;
     }
 
     // @ts-ignore
-    const _parents: Node[] = parentIDs.map((parentID) => immutableNode.get(parentID)).filter((parentNode) => {
+    const _parents: Node[] = parentIDs.map((parentID) => {
+      const keyPath = keyPathById(immutableNode, parentID as string);
+      if (!keyPath) {
+        return;
+      }
+      return immutableNode.getIn(keyPath);
+    }).filter((parentNode) => {
       if (!parentNode) {
         return false;
       }
