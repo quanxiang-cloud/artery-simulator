@@ -50,7 +50,7 @@ function Simulator({
   const visibleObserver = useVisibleObserver(setReport, backgroundRef.current);
   useEffect(() => {
     setImmutableNode(fromJS(artery.node));
-  }, [artery.node]);
+  }, [artery]);
 
   const timeRef = useRef<number>();
   const setIsScrolling = useSetRecoilState(isScrollingState);

@@ -17,3 +17,4 @@
 - dragging handle
 - 优化 `请拖拽组件到此处` 的提示
 - 点击 placeholder 需要可以选中父容器
+- bug: 当 node 支持 children 时，始终不能将其他节点移动到其左右，只能是 inner-left/right
