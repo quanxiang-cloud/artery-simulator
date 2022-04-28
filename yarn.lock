@@ -612,7 +612,7 @@
   dependencies:
     react "^17.0.2"
 
-"@one-for-all/utils@0.3.0":
+"@one-for-all/utils@0.3.0", "@one-for-all/utils@^0.3.0":
   version "0.3.0"
   resolved "https://registry.npmmirror.com/@one-for-all/utils/-/utils-0.3.0.tgz#853a78ee8b25a82a66f07c4a85bd1c8134627e8f"
   integrity sha512-8wfgOTt36wcilOlfLgiHL3/Uv5HlTs6aiO71WJrKOPvbvhBKoDYzRghxoG2BjYy+PSaeGVcD4TulgUsw8b/tEg==

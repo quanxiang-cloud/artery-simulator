@@ -1,23 +1,23 @@
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useRef, useEffect, useContext, useMemo } from 'react';
+import { useRecoilState } from 'recoil';
+import { logger } from '@one-for-all/utils';
 import ElementsRadar from '@one-for-all/elements-radar';
+
 import { SimulatorReport, VisibleNode } from '../types';
 import { AllElementsCTX } from './contexts';
+import { visibleElementsTickState } from '../atoms';
+import { useNextTick } from '../utils';
 
-function useObserverCallback(
-  setVisibleNodes: (elements: HTMLElement[]) => void,
-): IntersectionObserverCallback {
+function useObserverCallback(): IntersectionObserverCallback {
   const allElements = useContext(AllElementsCTX);
+  const tick = useNextTick();
 
   return (entries) => {
     entries.forEach(({ isIntersecting, target }) => {
       allElements.set(target as HTMLElement, isIntersecting);
     });
 
-    setVisibleNodes(
-      Array.from(allElements.entries())
-        .filter(([_, isVisible]) => isVisible)
-        .map(([ele]) => ele),
-    );
+    tick();
   };
 }
 
@@ -48,7 +48,8 @@ function useRadarRef(
             raw,
             relativeRect,
             absolutePosition: {
-              ...relativeRect,
+              height: relativeRect.height,
+              width: relativeRect.width,
               x: Math.round(relativeRect.x + deltaX),
               y: Math.round(relativeRect.y + deltaY),
             },
@@ -58,7 +59,7 @@ function useRadarRef(
       onReport({ visibleNodes, areaHeight: scrollHeight, areaWidth: scrollWidth });
       const n2 = performance.now();
 
-      console.log('calc visible nodes cost:', n2 - n1);
+      logger.debug('calc visible nodes cost:', n2 - n1);
     });
 
     return () => {
@@ -73,11 +74,18 @@ function useVisibleObserver(
   onReport: (report: SimulatorReport) => void,
   root: HTMLElement | null,
 ): IntersectionObserver {
-  const [latestVisibleElements, setLatesVisibleElements] = useState<HTMLElement[]>([]);
+  const allElements = useContext(AllElementsCTX);
+  const [n] = useRecoilState(visibleElementsTickState);
   const radarRef = useRadarRef(onReport, root);
   const visibleObserverRef = useRef<IntersectionObserver>(
-    new IntersectionObserver(useObserverCallback(setLatesVisibleElements), { root }),
+    new IntersectionObserver(useObserverCallback(), { root }),
   );
+
+  const latestVisibleElements = useMemo(() => {
+    return Array.from(allElements.entries())
+      .filter(([_, isVisible]) => isVisible)
+      .map(([ele]) => ele);
+  }, [n]);
 
   useEffect(() => {
     radarRef.current?.track(latestVisibleElements);

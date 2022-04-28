@@ -9,7 +9,7 @@ import { calcHoverPosition } from './calc-green-zone';
 import { ArteryCtx } from '../contexts';
 import { moveNode, dropNode, jsonParse } from './helper';
 import { getIsNodeSupportCache } from '../cache';
-import type { ContourNode, GreenZone, NodeWithoutChild } from '../types';
+import type { ContourNode, GreenZone, NodeWithoutChild, Position } from '../types';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { draggingNodeIDState, greenZoneState, hoveringParentIDState, immutableNodeState, isDraggingOverState } from '../atoms';
 
@@ -34,6 +34,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   const [draggingNodeID, setDraggingNodeID] = useRecoilState(draggingNodeIDState);
   const setIsDraggingOver = useSetRecoilState(isDraggingOverState);
   const [immutableNode] = useRecoilState(immutableNodeState);
+  const positionRef = useRef<Position>();
 
   // todo fix this
   function optimizedSetGreenZone(newZone?: GreenZone): void {
@@ -47,18 +48,24 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       return;
     }
 
-    setIsDraggingOver(true);
+    if (!draggingNodeID) {
+      setIsDraggingOver(true);
+    }
 
     // TODO bug
     // if hovering node is draggingNode's parent
     // dragging node will be move to first
     const position = calcHoverPosition({
-      x: e.clientX,
-      y: e.clientY,
-      rect: contourNode.raw,
+      cursorX: e.clientX,
+      cursorY: e.clientY,
+      hoveringRect: contourNode.raw,
       supportInner: !!getIsNodeSupportCache(currentArteryNodeRef.current as NodeWithoutChild),
     });
-    optimizedSetGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
+
+    if (positionRef.current !== position) {
+      positionRef.current = position;
+      optimizedSetGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
+    }
 
     return false;
   });
@@ -118,7 +125,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
 
   return (
     <div
-      key={contourNode.id}
+      id={`contour-${contourNode.id}`}
       style={style}
       onClick={handleClick}
       draggable={contourNode.id !== rootNodeID}

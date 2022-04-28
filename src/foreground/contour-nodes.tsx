@@ -24,8 +24,6 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
       return;
     }
 
-    // const n1 = performance.now();
-
     const _contourNodes = nodes
       .map((node) => {
         // todo performance issue
@@ -48,8 +46,6 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
       .filter((n): n is ContourNode => !!n);
 
     setContourNodes(_contourNodes);
-    // const n2 = performance.now();
-    // console.log('calc nodes cost:', n2 - n1);
   }, [nodes, isScrolling]);
 
   return contourNodes;
@@ -69,7 +65,7 @@ function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
         {contourNodes.map((contour) => {
           return (
             <RenderContourNode
-              key={contour.id}
+              key={`contour-${contour.id}`}
               contourNode={contour}
             />
           );

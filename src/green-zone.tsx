@@ -8,11 +8,12 @@ interface Props {
   greenZone: GreenZone;
 }
 
-function useContourNodeStyle({ depth, relativeRect }: ContourNode): React.CSSProperties {
-  const { height, width, x, y } = relativeRect;
+function useContourNodeStyle({ depth, absolutePosition }: ContourNode): React.CSSProperties {
+  const { height, width, x, y } = absolutePosition;
+
   return useMemo(() => {
     return {
-      zIndex: depth,
+      // zIndex: depth,
       height: height,
       width: width,
       transform: `translate(${x}px, ${y}px)`,

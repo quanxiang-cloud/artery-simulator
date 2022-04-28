@@ -31,21 +31,21 @@ import { Position } from '../types';
 // }
 
 interface GetPositionParam {
-  x: number;
-  y: number;
-  rect: DOMRectReadOnly;
+  cursorX: number;
+  cursorY: number;
+  hoveringRect: DOMRectReadOnly;
   supportInner: boolean;
 }
 
 // TODO optimize this
-export function calcHoverPosition({ x, rect, supportInner }: GetPositionParam): Position {
-  const leftDistance = Math.abs(x - rect.left);
-  const rightDistance = Math.abs(x - rect.right);
+export function calcHoverPosition({ cursorX, hoveringRect, supportInner }: GetPositionParam): Position {
+  const leftDistance = Math.abs(cursorX - hoveringRect.left);
+  const rightDistance = Math.abs(cursorX - hoveringRect.right);
   if (!supportInner) {
     return leftDistance < rightDistance ? 'left' : 'right';
   }
 
-  const oneThirdWidth = rect.width / 3;
+  const oneThirdWidth = hoveringRect.width / 3;
   if (leftDistance < oneThirdWidth) {
     return 'inner-left';
   }

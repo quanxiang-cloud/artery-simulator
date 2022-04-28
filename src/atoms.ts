@@ -26,3 +26,5 @@ export const activeContourNodeState = atom<ContourNode | undefined>({
 export const contourNodesState = atom<ContourNode[]>({ key: 'contourNodesState', default: [] });
 
 export const hoveringParentIDState = atom<string>({ key: 'hoveringParentIDState', default: '' });
+
+export const visibleElementsTickState = atom<number>({ key: 'visibleElementsTickState', default: 0 });

@@ -47,7 +47,7 @@ export function moveNode({
     return insertAt(_root, hoveringNodeID, 0, nodeToMove);
   }
 
-  console.error('unimplemented move position:', position);
+  logger.error('unimplemented move position:', position);
 
   return root;
 }
@@ -76,7 +76,7 @@ export function dropNode({ root, node, hoveringNodeID, position }: DropNodeParam
     return insertAt(root, hoveringNodeID, 0, node);
   }
 
-  console.error('unimplemented drop position:', position);
+  logger.error('unimplemented drop position:', position);
 
   return root;
 }
