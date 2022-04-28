@@ -1,15 +1,14 @@
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import React, { useState, useEffect, useMemo } from 'react';
-import { parent } from '@one-for-all/artery-utils';
+import { keyPathById } from '@one-for-all/artery-utils';
 
 import { ContourNode, VisibleNode } from '../types';
 import RenderContourNode from './render-contour-node';
 import Toolbar from './toolbar';
-import { contourNodesState, immutableNodeState } from '../atoms';
+import { contourNodesState, immutableNodeState, isScrollingState } from '../atoms';
 
 interface Props {
   nodes: VisibleNode[];
-  scrolling: boolean;
 }
 
 function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<ContourNode> {
@@ -28,8 +27,8 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
       .map((node) => {
         // todo performance issue
         if (!nodeDepthCache.has(node.id)) {
-          const parentKeyPath = parent(immutableNode, node.id);
-          nodeDepthCache.set(node.id, parentKeyPath?.size || 0);
+          const keyPath = keyPathById(immutableNode, node.id);
+          nodeDepthCache.set(node.id, keyPath?.size || 0);
         }
 
         const depth = nodeDepthCache.get(node.id) || 0;
@@ -51,8 +50,9 @@ function useContourNodes(nodes: VisibleNode[], isScrolling: boolean): Array<Cont
   return contourNodes;
 }
 
-function ContourNodes({ nodes, scrolling }: Props): JSX.Element {
-  const contourNodes = useContourNodes(nodes, scrolling);
+function ContourNodes({ nodes }: Props): JSX.Element {
+  const [isScrolling] = useRecoilState(isScrollingState);
+  const contourNodes = useContourNodes(nodes, isScrolling);
 
   const setContourNodesState = useSetRecoilState(contourNodesState);
   useEffect(() => {

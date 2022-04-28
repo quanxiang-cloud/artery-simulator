@@ -7,9 +7,10 @@ import { ArteryCtx } from '../../contexts';
 
 interface Props {
   currentNodeID: string;
+  onParentClick: () => void;
 }
 
-function ParentNodes({ currentNodeID }: Props): JSX.Element | null {
+function ParentNodes({ currentNodeID, onParentClick }: Props): JSX.Element | null {
   const { artery, setActiveNode } = useContext(ArteryCtx);
   const [parents, setParents] = useState<Node[]>([]);
   const setHoveringParentID = useSetRecoilState(hoveringParentIDState);
@@ -17,8 +18,8 @@ function ParentNodes({ currentNodeID }: Props): JSX.Element | null {
   useEffect(() => {
     const _parents = getNodeParents(artery.node, currentNodeID);
 
-    // remove root, and just show the max 5 level parent
-    setParents(_parents?.slice(1).reverse().slice(0, 5) || []);
+    // just show the max 5 level parent
+    setParents(_parents?.reverse().slice(0, 5) || []);
   }, [artery]);
 
   if (!parents.length) {
@@ -41,7 +42,9 @@ function ParentNodes({ currentNodeID }: Props): JSX.Element | null {
             }}
             onClick={(e) => {
               e.stopPropagation();
+              setHoveringParentID('');
               setActiveNode(parent);
+              onParentClick();
             }}
           >
             {/* todo optimize this value */}

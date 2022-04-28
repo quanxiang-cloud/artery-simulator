@@ -22,7 +22,7 @@ const modifiers = [
 function ContourNodeToolbar(): JSX.Element | null {
   const { activeNode } = useContext(ArteryCtx);
   const contourNode = useActiveContourNode();
-  const { referenceRef, Popper, handleMouseEnter, handleMouseLeave } = usePopper<HTMLSpanElement>();
+  const { referenceRef, Popper, handleMouseEnter, handleMouseLeave, close } = usePopper<HTMLSpanElement>();
   const containerRef = useRef<HTMLDivElement>(null);
   const { artery, setActiveNode, onChange, genNodeID } = useContext(ArteryCtx);
   const style = useToolbarStyle(contourNode);
@@ -75,7 +75,7 @@ function ContourNodeToolbar(): JSX.Element | null {
         <Icon name="delete_forever" size={16} />
       </span>
       <Popper placement="bottom-start" modifiers={modifiers} >
-        <ParentNodes currentNodeID={contourNode.id} />
+        <ParentNodes currentNodeID={contourNode.id} onParentClick={close} />
       </Popper>
     </div>
   );

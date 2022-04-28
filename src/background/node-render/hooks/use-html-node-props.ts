@@ -1,12 +1,15 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { CTX, HTMLNode } from '@one-for-all/artery-renderer';
 import { useInstantiateProps } from '@one-for-all/artery-renderer';
+
 import useElementRegistration from './use-element-registration';
+import { ArteryCtx } from '../../../contexts';
 
 export default function useHTMLNodeProps(node: HTMLNode, ctx: CTX): Record<string, unknown> {
   const props = useInstantiateProps(node, ctx);
   const { register, unregister } = useElementRegistration();
   const ref = useRef<HTMLElement>();
+  const { rootNodeID } = useContext(ArteryCtx);
 
   useEffect(() => {
     if (ref.current) {
@@ -21,5 +24,10 @@ export default function useHTMLNodeProps(node: HTMLNode, ctx: CTX): Record<strin
   }, []);
 
   // todo support forward ref case
-  return { ...props, ref, 'data-simulator-node-id': node.id };
+  return {
+    ...props,
+    ref,
+    'data-simulator-node-id': node.id,
+    'data-simulator-background-root-node': rootNodeID === node.id ? true : undefined,
+  };
 }

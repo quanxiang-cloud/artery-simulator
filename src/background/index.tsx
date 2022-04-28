@@ -18,7 +18,11 @@ function Background({ artery, plugins }: Props): JSX.Element | null {
 
   return (
     <div className="simulator-background">
+      {/* extra top padding */}
+      <div style={{ height: '20px' }} />
       <NodeRender node={rootNode} ctx={ctx} />
+      {/* extra bottom padding */}
+      <div style={{ height: '20px' }} />
     </div>
   );
 }

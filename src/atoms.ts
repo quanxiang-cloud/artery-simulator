@@ -14,8 +14,6 @@ export const greenZoneState = atom<GreenZone | undefined>({ key: 'greenZoneState
 
 export const draggingNodeIDState = atom<string>({ key: 'draggingNodeIDState', default: '' });
 
-export const scrollPositionState = atom({ key: 'scrollPositionState', default: { x: 0, y: 0 } });
-
 export const activeContourNodeState = atom<ContourNode | undefined>({
   key: 'activeContourNodeState',
   default: undefined,
@@ -26,3 +24,5 @@ export const contourNodesState = atom<ContourNode[]>({ key: 'contourNodesState',
 export const hoveringParentIDState = atom<string>({ key: 'hoveringParentIDState', default: '' });
 
 export const visibleElementsTickState = atom<number>({ key: 'visibleElementsTickState', default: 0 });
+
+export const isScrollingState = atom<boolean>({ key: 'isScrollingState', default: false });

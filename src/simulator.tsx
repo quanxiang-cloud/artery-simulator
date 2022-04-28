@@ -11,7 +11,7 @@ import { ArteryCtx } from './contexts';
 import { NodeWithoutChild, SimulatorReport } from './types';
 import { AllElementsCTX, VisibleObserverCTX } from './background/contexts';
 import RenderGreenZone from './green-zone';
-import { immutableNodeState } from './atoms';
+import { immutableNodeState, isScrollingState } from './atoms';
 import useVisibleObserver from './background/use-visible-observer';
 import './index.scss';
 
@@ -52,6 +52,17 @@ function Simulator({
     setImmutableNode(fromJS(artery.node));
   }, [artery.node]);
 
+  const timeRef = useRef<number>();
+  const setIsScrolling = useSetRecoilState(isScrollingState);
+
+  function handleScroll(): void {
+    setIsScrolling(true);
+    clearTimeout(timeRef.current);
+    timeRef.current = window.setTimeout(() => {
+      setIsScrolling(false);
+    }, 500);
+  }
+
   return (
     <ArteryCtx.Provider
       value={{
@@ -67,7 +78,11 @@ function Simulator({
     >
       <AllElementsCTX.Provider value={ALL_ELEMENTS}>
         <VisibleObserverCTX.Provider value={visibleObserver}>
-          <div ref={backgroundRef} className={cs('artery-simulator-root', className)}>
+          <div
+            ref={backgroundRef}
+            className={cs('artery-simulator-root', className)}
+            onScroll={handleScroll}
+          >
             <Background
               artery={artery}
               plugins={plugins}
