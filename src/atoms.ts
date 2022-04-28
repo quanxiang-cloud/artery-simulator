@@ -14,8 +14,6 @@ export const greenZoneState = atom<GreenZone | undefined>({ key: 'greenZoneState
 
 export const draggingNodeIDState = atom<string>({ key: 'draggingNodeIDState', default: '' });
 
-export const isDraggingOverState = atom<boolean>({ key: 'isDraggingOverState', default: false });
-
 export const scrollPositionState = atom({ key: 'scrollPositionState', default: { x: 0, y: 0 } });
 
 export const activeContourNodeState = atom<ContourNode | undefined>({

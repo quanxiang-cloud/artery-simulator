@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cs from 'classnames';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { fromJS } from 'immutable';
 import { Plugins } from '@one-for-all/artery-renderer';
 import { Artery, Node } from '@one-for-all/artery';
@@ -11,9 +11,9 @@ import { ArteryCtx } from './contexts';
 import { NodeWithoutChild, SimulatorReport } from './types';
 import { AllElementsCTX, VisibleObserverCTX } from './background/contexts';
 import RenderGreenZone from './green-zone';
-import './index.scss';
-import { greenZoneState, immutableNodeState, isDraggingOverState } from './atoms';
+import { immutableNodeState } from './atoms';
 import useVisibleObserver from './background/use-visible-observer';
+import './index.scss';
 
 export interface Props {
   artery: Artery;
@@ -43,10 +43,8 @@ function Simulator({
   onDropFile,
 }: Props): JSX.Element {
   const [report, setReport] = useState<SimulatorReport>();
-  const [isDraggingOver] = useRecoilState(isDraggingOverState);
   const setImmutableNode = useSetRecoilState(immutableNodeState);
   // todo move this into RenderGreenZone
-  const [greenZone] = useRecoilState(greenZoneState);
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   const visibleObserver = useVisibleObserver(setReport, backgroundRef.current);
@@ -75,7 +73,7 @@ function Simulator({
               plugins={plugins}
             />
             {report && <Foreground report={report} />}
-            {isDraggingOver && greenZone && <RenderGreenZone greenZone={greenZone} />}
+            <RenderGreenZone />
           </div>
         </VisibleObserverCTX.Provider>
       </AllElementsCTX.Provider>

@@ -10,8 +10,8 @@ import { ArteryCtx } from '../contexts';
 import { moveNode, dropNode, jsonParse } from './helper';
 import { getIsNodeSupportCache } from '../cache';
 import type { ContourNode, GreenZone, NodeWithoutChild, Position } from '../types';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { draggingNodeIDState, greenZoneState, hoveringParentIDState, immutableNodeState, isDraggingOverState } from '../atoms';
+import { useRecoilState } from 'recoil';
+import { draggingNodeIDState, greenZoneState, hoveringParentIDState, immutableNodeState } from '../atoms';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -32,7 +32,6 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   const currentArteryNodeRef = useRef<Node>();
   const [greenZone, setGreenZone] = useRecoilState(greenZoneState);
   const [draggingNodeID, setDraggingNodeID] = useRecoilState(draggingNodeIDState);
-  const setIsDraggingOver = useSetRecoilState(isDraggingOverState);
   const [immutableNode] = useRecoilState(immutableNodeState);
   const positionRef = useRef<Position>();
 
@@ -46,10 +45,6 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   const handleDragOver = throttle((e) => {
     if (draggingNodeID === contourNode.id) {
       return;
-    }
-
-    if (!draggingNodeID) {
-      setIsDraggingOver(true);
     }
 
     // TODO bug
@@ -68,7 +63,8 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
     }
 
     return false;
-  });
+    // todo optimize this
+  }, 200);
 
   function handleClick(): void {
     const keyPath = byArbitrary(immutableNode, contourNode.id);
@@ -84,7 +80,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
 
   // todo give this function a better name
   function handleDrop(e: React.DragEvent<HTMLElement>): Artery | undefined {
-    setIsDraggingOver(false);
+    setDraggingNodeID('');
 
     if (!greenZone) {
       return;

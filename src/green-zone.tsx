@@ -1,29 +1,35 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import cs from 'classnames';
 import { ArteryCtx } from './contexts';
 
-import { GreenZone, ContourNode } from './types';
+import { draggingNodeIDState, greenZoneState } from './atoms';
+import { useRecoilState } from 'recoil';
+import { Rect } from '@one-for-all/elements-radar';
 
-interface Props {
-  greenZone: GreenZone;
+function getStyle(rect?: Rect): React.CSSProperties | undefined {
+  if (!rect) {
+    return;
+  }
+
+  const { height, width, x, y } = rect;
+  return {
+    // zIndex: depth,
+    height: height,
+    width: width,
+    transform: `translate(${x}px, ${y}px)`,
+  };
 }
 
-function useContourNodeStyle({ depth, absolutePosition }: ContourNode): React.CSSProperties {
-  const { height, width, x, y } = absolutePosition;
-
-  return useMemo(() => {
-    return {
-      // zIndex: depth,
-      height: height,
-      width: width,
-      transform: `translate(${x}px, ${y}px)`,
-    };
-  }, [height, width, x, y, depth]);
-}
-
-function RenderGreenZone({ greenZone }: Props): JSX.Element {
-  const style = useContourNodeStyle(greenZone.mostInnerNode);
+function RenderGreenZone(): JSX.Element | null {
+  const [greenZone] = useRecoilState(greenZoneState);
+  const [draggingNodeID] = useRecoilState(draggingNodeIDState);
   const { rootNodeID } = useContext(ArteryCtx);
+
+  if (!draggingNodeID || !greenZone) {
+    return null;
+  }
+
+  const style = getStyle(greenZone.mostInnerNode.absolutePosition);
 
   return (
     <div
