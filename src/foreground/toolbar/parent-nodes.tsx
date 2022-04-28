@@ -1,8 +1,8 @@
 import { Node } from '@one-for-all/artery';
-import { getNodeParents } from '@one-for-all/artery-utils';
+import { parentIdPath } from '@one-for-all/artery-utils';
 import React, { useContext, useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { hoveringParentIDState } from '../../atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { hoveringParentIDState, immutableNodeState } from '../../atoms';
 import { ArteryCtx } from '../../contexts';
 
 interface Props {
@@ -12,12 +12,26 @@ interface Props {
 
 function ParentNodes({ currentNodeID, onParentClick }: Props): JSX.Element | null {
   const { artery, setActiveNode } = useContext(ArteryCtx);
+  const [immutableNode] = useRecoilState(immutableNodeState);
   const [parents, setParents] = useState<Node[]>([]);
   const setHoveringParentID = useSetRecoilState(hoveringParentIDState);
 
   useEffect(() => {
-    const _parents = getNodeParents(artery.node, currentNodeID);
+    const parentIDs = parentIdPath(immutableNode, currentNodeID);
+    if (!parentIDs) {
+      return;
+    }
 
+    // @ts-ignore
+    const _parents: Node[] = parentIDs.map((parentID) => immutableNode.get(parentID)).filter((parentNode) => {
+      if (!parentNode) {
+        return false;
+      }
+
+      // @ts-ignore
+      const parentNodeType = parentNode.getIn(['type']);
+      return parentNodeType === 'html-element' || parentNodeType === 'react-component';
+    }).toJS();
     // just show the max 5 level parent
     setParents(_parents?.reverse().slice(0, 5) || []);
   }, [artery]);
