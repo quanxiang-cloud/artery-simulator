@@ -1,3 +1,4 @@
+import { Node } from '@one-for-all/artery';
 import immutable from 'immutable';
 import {
   atom,
@@ -12,7 +13,7 @@ export const immutableNodeState = atom<Immutable.Collection<unknown, unknown>>({
 
 export const greenZoneState = atom<GreenZone | undefined>({ key: 'greenZoneState', default: undefined });
 
-export const draggingNodeIDState = atom<string>({ key: 'draggingNodeIDState', default: '' });
+export const draggingArteryNodeState = atom<Node | undefined>({ key: 'draggingNodeIDState', default: undefined });
 
 export const activeContourNodeState = atom<ContourNode | undefined>({
   key: 'activeContourNodeState',

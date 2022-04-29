@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import cs from 'classnames';
 import { debounce } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
@@ -11,7 +11,8 @@ import { moveNode, dropNode, jsonParse } from './helper';
 import { getIsNodeSupportCache } from '../cache';
 import type { ContourNode, GreenZone, NodeWithoutChild, Position } from '../types';
 import { useRecoilState } from 'recoil';
-import { draggingNodeIDState, greenZoneState, hoveringParentIDState, immutableNodeState } from '../atoms';
+import { draggingArteryNodeState, greenZoneState, hoveringParentIDState, immutableNodeState } from '../atoms';
+import { overrideDragImage } from '../utils';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -23,13 +24,35 @@ interface Props {
   contourNode: ContourNode;
 }
 
-function shouldHandleDnd(currentID: string, draggingNodeID: string, root: Immutable.Collection<unknown, unknown>): boolean {
+function shouldHandleDnd(
+  currentID: string,
+  draggingNodeID: string,
+  root: Immutable.Collection<unknown, unknown>,
+): boolean {
   const parentIDs = parentIdsSeq(root, currentID);
   if (!parentIDs) {
     return false;
   }
 
   return parentIDs.keyOf(draggingNodeID) !== undefined ? false : true;
+}
+
+function useShouldHandleDndCallback(currentID: string): () => boolean {
+  const shouldHandleRef = useRef<boolean | undefined>();
+  const [root] = useRecoilState(immutableNodeState);
+  const [draggingArteryNode] = useRecoilState(draggingArteryNodeState);
+
+  return useCallback(() => {
+    if (!draggingArteryNode) {
+      return false;
+    }
+
+    if (shouldHandleRef.current === undefined) {
+      shouldHandleRef.current = shouldHandleDnd(currentID, draggingArteryNode.id, root);
+    }
+
+    return shouldHandleRef.current;
+  }, [draggingArteryNode, root]);
 }
 
 function RenderContourNode({ contourNode }: Props): JSX.Element {
@@ -40,9 +63,11 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   //   useContext(IndicatorCTX);
   const currentArteryNodeRef = useRef<Node>();
   const [greenZone, setGreenZone] = useRecoilState(greenZoneState);
-  const [draggingNodeID, setDraggingNodeID] = useRecoilState(draggingNodeIDState);
+  const [draggingArteryNode, setDraggingArteryNode] = useRecoilState(draggingArteryNodeState);
   const [immutableNode] = useRecoilState(immutableNodeState);
   const positionRef = useRef<Position>();
+
+  const _shouldHandleDnd = useShouldHandleDndCallback(contourNode.id);
 
   // todo fix this
   function optimizedSetGreenZone(newZone?: GreenZone): void {
@@ -52,7 +77,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   }
 
   const handleDragOver = debounce((e) => {
-    if (draggingNodeID === contourNode.id) {
+    if (draggingArteryNode?.id === contourNode.id) {
       return;
     }
 
@@ -89,17 +114,17 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
 
   // todo give this function a better name
   function handleDrop(e: React.DragEvent<HTMLElement>): Artery | undefined {
-    setDraggingNodeID('');
+    setDraggingArteryNode(undefined);
 
     if (!greenZone) {
       return;
     }
 
     // move action
-    if (draggingNodeID) {
+    if (draggingArteryNode) {
       const newRoot = moveNode({
         root: artery.node,
-        draggingNodeID,
+        draggingNodeID: draggingArteryNode.id,
         hoveringNodeID: greenZone.hoveringNodeID,
         position: greenZone.position,
       });
@@ -135,17 +160,29 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       onClick={handleClick}
       draggable={contourNode.id !== rootNodeID}
       onDragStart={(e) => {
-        setDraggingNodeID(contourNode.id);
         // todo this has no affect, fix it!
         e.dataTransfer.effectAllowed = 'move';
+
+        const keyPath = keyPathById(immutableNode, contourNode.id);
+        if (!keyPath) {
+          return;
+        }
+        // @ts-ignore
+        const arteryNode = immutableNode.getIn(keyPath)?.toJS();
+        if (!arteryNode) {
+          return;
+        }
+        setDraggingArteryNode(arteryNode);
+
+        overrideDragImage(e.dataTransfer);
       }}
       onDragEnd={() => {
-        setDraggingNodeID('');
+        setDraggingArteryNode(undefined);
         setGreenZone(undefined);
       }}
       onDrag={preventDefault}
       onDragOver={(e) => {
-        if (!shouldHandleDnd(contourNode.id, draggingNodeID, immutableNode)) {
+        if (!_shouldHandleDnd()) {
           return;
         }
 
@@ -154,7 +191,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
         return false;
       }}
       onDragEnter={(e) => {
-        if (!shouldHandleDnd(contourNode.id, draggingNodeID, immutableNode)) {
+        if (!_shouldHandleDnd()) {
           return;
         }
 
@@ -187,7 +224,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
         'contour-node--root': rootNodeID === contourNode.id,
         'contour-node--active': activeNode?.id === contourNode.id,
         'contour-node--hover-as-parent': hoveringParentID === contourNode.id,
-        'contour-node--dragging': draggingNodeID === contourNode.id,
+        'contour-node--dragging': draggingArteryNode?.id === contourNode.id,
       })}
     />
   );

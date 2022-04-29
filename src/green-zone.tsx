@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import cs from 'classnames';
 import { ArteryCtx } from './contexts';
 
-import { draggingNodeIDState, greenZoneState } from './atoms';
+import { draggingArteryNodeState, greenZoneState } from './atoms';
 import { useRecoilState } from 'recoil';
 import { Rect } from '@one-for-all/elements-radar';
 
@@ -78,7 +78,7 @@ function useIndicatorStyle(): React.CSSProperties | undefined {
 
 function RenderGreenZone(): JSX.Element | null {
   const [greenZone] = useRecoilState(greenZoneState);
-  const [draggingNodeID] = useRecoilState(draggingNodeIDState);
+  const [draggingNodeID] = useRecoilState(draggingArteryNodeState);
   const { rootNodeID } = useContext(ArteryCtx);
   const indicatorStyle = useIndicatorStyle();
 

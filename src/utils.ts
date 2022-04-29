@@ -11,3 +11,10 @@ export function useNextTick(): () => void {
     next(n);
   };
 }
+
+const img = new Image();
+img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+export function overrideDragImage(dateTransfer: DataTransfer): void {
+  dateTransfer.setDragImage(img, 0, 0);
+}
