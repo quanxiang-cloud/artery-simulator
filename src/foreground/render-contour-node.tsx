@@ -1,13 +1,12 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useCallback, useContext, useMemo, useRef } from 'react';
 import cs from 'classnames';
-import { Artery, Node } from '@one-for-all/artery';
-import { byArbitrary, keyPathById, parentIdsSeq } from '@one-for-all/artery-utils';
+import { Node } from '@one-for-all/artery';
+import { byArbitrary, parentIdsSeq } from '@one-for-all/artery-utils';
 
 import useContourNodeStyle from './use-active-contour-node-style';
 import { ArteryCtx } from '../contexts';
-import { moveNode, dropNode, jsonParse } from './helper';
 import type { ContourNode } from '../types';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { draggingArteryNodeState, greenZoneState, hoveringParentIDState, immutableNodeState } from '../atoms';
 import { overrideDragImage } from '../utils';
 import Toolbar from './toolbar';
@@ -21,6 +20,7 @@ function preventDefault(e: any): false {
 interface Props {
   contourNode: ContourNode;
   handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>) => void;
 }
 
 function shouldHandleDnd(
@@ -54,66 +54,25 @@ function useShouldHandleDndCallback(currentID: string): () => boolean {
   }, [draggingArteryNode, root]);
 }
 
-function RenderContourNode({ contourNode, handleDragOver }: Props): JSX.Element {
+function RenderContourNode({ contourNode, handleDragOver, handleDrop }: Props): JSX.Element {
   const [hoveringParentID] = useRecoilState(hoveringParentIDState);
   const { onChange, rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
   const style = useContourNodeStyle(contourNode);
-  const [greenZone, setGreenZone] = useRecoilState(greenZoneState);
+  const setGreenZone = useSetRecoilState(greenZoneState);
   const [draggingArteryNode, setDraggingArteryNode] = useRecoilState(draggingArteryNodeState);
   const [immutableNode] = useRecoilState(immutableNodeState);
-
-  const _shouldHandleDnd = useShouldHandleDndCallback(contourNode.id);
-  function handleClick(): void {
+  const currentArteryNode: Node | undefined = useMemo(() => {
     const keyPath = byArbitrary(immutableNode, contourNode.id);
     if (!keyPath) {
       return;
     }
+    // @ts-ignore
+    return immutableNode.getIn(keyPath)?.toJS();
+  }, [immutableNode]);
 
-    if (immutableNode.hasIn(keyPath)) {
-      // @ts-ignore
-      setActiveNode(immutableNode.getIn(keyPath).toJS());
-    }
-  }
-
-  // todo give this function a better name
-  function handleDrop(e: React.DragEvent<HTMLElement>): Artery | undefined {
-    setDraggingArteryNode(undefined);
-
-    if (!greenZone) {
-      return;
-    }
-
-    // move action
-    if (draggingArteryNode) {
-      const newRoot = moveNode({
-        root: artery.node,
-        draggingNodeID: draggingArteryNode.id,
-        hoveringNodeID: greenZone.hoveringNodeID,
-        position: greenZone.position,
-      });
-
-      if (newRoot) {
-        return { ...artery, node: newRoot };
-      }
-
-      return;
-    }
-
-    const droppedNode = jsonParse<Node>(e.dataTransfer.getData('__artery-node'));
-    if (droppedNode) {
-      // todo drop action
-      const newRoot = dropNode({
-        root: artery.node,
-        node: droppedNode,
-        hoveringNodeID: greenZone.hoveringNodeID,
-        position: greenZone.position,
-      });
-      if (newRoot) {
-        return { ...artery, node: newRoot };
-      }
-    }
-
-    return;
+  const _shouldHandleDnd = useShouldHandleDndCallback(contourNode.id);
+  function handleClick(): void {
+    setActiveNode(currentArteryNode);
   }
 
   return (
@@ -126,17 +85,7 @@ function RenderContourNode({ contourNode, handleDragOver }: Props): JSX.Element 
         onDragStart={(e) => {
           // todo this has no affect, fix it!
           e.dataTransfer.effectAllowed = 'move';
-
-          const keyPath = keyPathById(immutableNode, contourNode.id);
-          if (!keyPath) {
-            return;
-          }
-          // @ts-ignore
-          const arteryNode = immutableNode.getIn(keyPath)?.toJS();
-          if (!arteryNode) {
-            return;
-          }
-          setDraggingArteryNode(arteryNode);
+          setDraggingArteryNode(currentArteryNode);
 
           overrideDragImage(e.dataTransfer);
         }}
@@ -165,14 +114,7 @@ function RenderContourNode({ contourNode, handleDragOver }: Props): JSX.Element 
         onDrop={(e) => {
           e.stopPropagation();
           e.preventDefault();
-          const newArtery = handleDrop(e);
-          if (newArtery) {
-            onChange(newArtery);
-          }
-
-          // reset green zone to undefine to prevent green zone first paine flash
-          setGreenZone(undefined);
-
+          handleDrop(e);
           return false;
         }}
         className={cs('contour-node', {
