@@ -4,7 +4,7 @@ import { debounce } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
 import { byArbitrary, keyPathById, parentIdsSeq } from '@one-for-all/artery-utils';
 
-import useContourNodeStyle from './use-active-contour-node';
+import useContourNodeStyle from './use-active-contour-node-style';
 import { calcHoverPosition } from './calc-green-zone';
 import { ArteryCtx } from '../contexts';
 import { moveNode, dropNode, jsonParse } from './helper';
@@ -13,6 +13,7 @@ import type { ContourNode, GreenZone, NodeWithoutChild, Position } from '../type
 import { useRecoilState } from 'recoil';
 import { draggingArteryNodeState, greenZoneState, hoveringParentIDState, immutableNodeState } from '../atoms';
 import { overrideDragImage } from '../utils';
+import Toolbar from './toolbar';
 
 function preventDefault(e: any): false {
   e.preventDefault();
@@ -77,10 +78,6 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   }
 
   const handleDragOver = debounce((e) => {
-    if (draggingArteryNode?.id === contourNode.id) {
-      return;
-    }
-
     // TODO bug
     // if hovering node is draggingNode's parent
     // dragging node will be move to first
@@ -154,79 +151,84 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
   }
 
   return (
-    <div
-      id={`contour-${contourNode.id}`}
-      style={style}
-      onClick={handleClick}
-      draggable={contourNode.id !== rootNodeID}
-      onDragStart={(e) => {
-        // todo this has no affect, fix it!
-        e.dataTransfer.effectAllowed = 'move';
+    <>
+      <div
+        id={`contour-${contourNode.id}`}
+        style={style}
+        onClick={handleClick}
+        draggable={contourNode.id !== rootNodeID}
+        onDragStart={(e) => {
+          // todo this has no affect, fix it!
+          e.dataTransfer.effectAllowed = 'move';
 
-        const keyPath = keyPathById(immutableNode, contourNode.id);
-        if (!keyPath) {
-          return;
-        }
-        // @ts-ignore
-        const arteryNode = immutableNode.getIn(keyPath)?.toJS();
-        if (!arteryNode) {
-          return;
-        }
-        setDraggingArteryNode(arteryNode);
+          const keyPath = keyPathById(immutableNode, contourNode.id);
+          if (!keyPath) {
+            return;
+          }
+          // @ts-ignore
+          const arteryNode = immutableNode.getIn(keyPath)?.toJS();
+          if (!arteryNode) {
+            return;
+          }
+          setDraggingArteryNode(arteryNode);
 
-        overrideDragImage(e.dataTransfer);
-      }}
-      onDragEnd={() => {
-        setDraggingArteryNode(undefined);
-        setGreenZone(undefined);
-      }}
-      onDrag={preventDefault}
-      onDragOver={(e) => {
-        if (!_shouldHandleDnd()) {
-          return;
-        }
+          overrideDragImage(e.dataTransfer);
+        }}
+        onDragEnd={() => {
+          setDraggingArteryNode(undefined);
+          setGreenZone(undefined);
+        }}
+        onDrag={preventDefault}
+        onDragOver={(e) => {
+          if (!_shouldHandleDnd()) {
+            return;
+          }
 
-        preventDefault(e);
-        handleDragOver(e);
-        return false;
-      }}
-      onDragEnter={(e) => {
-        if (!_shouldHandleDnd()) {
-          return;
-        }
+          preventDefault(e);
+          handleDragOver(e);
+          return false;
+        }}
+        onDragEnter={(e) => {
+          if (!_shouldHandleDnd()) {
+            return;
+          }
 
-        const keyPath = keyPathById(immutableNode, contourNode.id);
-        if (!keyPath) {
-          return;
-        }
-        // @ts-ignore
-        const arteryNode = immutableNode.getIn(keyPath)?.toJS();
-        currentArteryNodeRef.current = arteryNode;
+          const keyPath = keyPathById(immutableNode, contourNode.id);
+          if (!keyPath) {
+            return;
+          }
+          // @ts-ignore
+          const arteryNode = immutableNode.getIn(keyPath)?.toJS();
+          currentArteryNodeRef.current = arteryNode;
 
-        preventDefault(e);
+          preventDefault(e);
 
-        return false;
-      }}
-      onDrop={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        const newArtery = handleDrop(e);
-        if (newArtery) {
-          onChange(newArtery);
-        }
+          return false;
+        }}
+        onDrop={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const newArtery = handleDrop(e);
+          if (newArtery) {
+            onChange(newArtery);
+          }
 
-        // reset green zone to undefine to prevent green zone first paine flash
-        setGreenZone(undefined);
+          // reset green zone to undefine to prevent green zone first paine flash
+          setGreenZone(undefined);
 
-        return false;
-      }}
-      className={cs('contour-node', {
-        'contour-node--root': rootNodeID === contourNode.id,
-        'contour-node--active': activeNode?.id === contourNode.id,
-        'contour-node--hover-as-parent': hoveringParentID === contourNode.id,
-        'contour-node--dragging': draggingArteryNode?.id === contourNode.id,
-      })}
-    />
+          return false;
+        }}
+        className={cs('contour-node', {
+          'contour-node--root': rootNodeID === contourNode.id,
+          'contour-node--active': activeNode?.id === contourNode.id,
+          'contour-node--hover-as-parent': hoveringParentID === contourNode.id,
+          'contour-node--dragging': draggingArteryNode?.id === contourNode.id,
+        })}
+      />
+      {activeNode?.id === contourNode.id && (
+        <Toolbar contourNode={contourNode} />
+      )}
+    </>
   );
 }
 

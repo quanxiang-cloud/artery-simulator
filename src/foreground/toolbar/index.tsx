@@ -5,9 +5,9 @@ import ParentNodes from './parent-nodes';
 import { deleteByID, insertAfter } from '@one-for-all/artery-utils';
 import Icon from '@one-for-all/icon';
 import duplicateNode from './duplicate-node';
-import { useActiveContourNode } from './use-active-contour-node';
 import useToolbarStyle from './use-toolbar-style';
 import { useNodeLabel } from './use-node-label';
+import { ContourNode } from '../../types';
 
 const modifiers = [
   {
@@ -18,10 +18,13 @@ const modifiers = [
   },
 ];
 
+interface Props {
+  contourNode: ContourNode;
+}
+
 // render toolbar on another context to prevent it be covered by contour node
-function ContourNodeToolbar(): JSX.Element | null {
+function ContourNodeToolbar({ contourNode }: Props): JSX.Element | null {
   const { activeNode } = useContext(ArteryCtx);
-  const contourNode = useActiveContourNode();
   const { referenceRef, Popper, handleMouseEnter, handleMouseLeave, close } = usePopper<HTMLSpanElement>();
   const containerRef = useRef<HTMLDivElement>(null);
   const { artery, setActiveNode, onChange, genNodeID } = useContext(ArteryCtx);
