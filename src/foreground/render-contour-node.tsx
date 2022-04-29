@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import cs from 'classnames';
 import { throttle } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
-import { byArbitrary, findNodeByID } from '@one-for-all/artery-utils';
+import { byArbitrary, keyPathById, parentIdsSeq } from '@one-for-all/artery-utils';
 
 import useContourNodeStyle from './use-active-contour-node';
 import { calcHoverPosition } from './calc-green-zone';
@@ -141,9 +141,25 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
         return false;
       }}
       onDragEnter={(e) => {
-        preventDefault(e);
+        const parentIDs = parentIdsSeq(immutableNode, contourNode.id);
+        if (!parentIDs) {
+          return;
+        }
 
-        currentArteryNodeRef.current = findNodeByID(artery.node, contourNode.id);
+        const K = parentIDs.keyOf(draggingNodeID);
+        if (!K) {
+          return;
+        }
+
+        const keyPath = keyPathById(immutableNode, contourNode.id);
+        if (!keyPath) {
+          return;
+        }
+        // @ts-ignore
+        const arteryNode = immutableNode.getIn(keyPath)?.toJS();
+        currentArteryNodeRef.current = arteryNode;
+
+        preventDefault(e);
 
         return false;
       }}
