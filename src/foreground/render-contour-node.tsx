@@ -1,15 +1,12 @@
 import React, { useCallback, useContext, useRef } from 'react';
 import cs from 'classnames';
-import { debounce } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
 import { byArbitrary, keyPathById, parentIdsSeq } from '@one-for-all/artery-utils';
 
 import useContourNodeStyle from './use-active-contour-node-style';
-import { calcHoverPosition } from './calc-green-zone';
 import { ArteryCtx } from '../contexts';
 import { moveNode, dropNode, jsonParse } from './helper';
-import { getIsNodeSupportCache } from '../cache';
-import type { ContourNode, GreenZone, NodeWithoutChild, Position } from '../types';
+import type { ContourNode } from '../types';
 import { useRecoilState } from 'recoil';
 import { draggingArteryNodeState, greenZoneState, hoveringParentIDState, immutableNodeState } from '../atoms';
 import { overrideDragImage } from '../utils';
@@ -23,6 +20,7 @@ function preventDefault(e: any): false {
 
 interface Props {
   contourNode: ContourNode;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
 }
 
 function shouldHandleDnd(
@@ -56,47 +54,15 @@ function useShouldHandleDndCallback(currentID: string): () => boolean {
   }, [draggingArteryNode, root]);
 }
 
-function RenderContourNode({ contourNode }: Props): JSX.Element {
+function RenderContourNode({ contourNode, handleDragOver }: Props): JSX.Element {
   const [hoveringParentID] = useRecoilState(hoveringParentIDState);
   const { onChange, rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
   const style = useContourNodeStyle(contourNode);
-  // const { setShowIndicator } =
-  //   useContext(IndicatorCTX);
-  const currentArteryNodeRef = useRef<Node>();
   const [greenZone, setGreenZone] = useRecoilState(greenZoneState);
   const [draggingArteryNode, setDraggingArteryNode] = useRecoilState(draggingArteryNodeState);
   const [immutableNode] = useRecoilState(immutableNodeState);
-  const positionRef = useRef<Position>();
 
   const _shouldHandleDnd = useShouldHandleDndCallback(contourNode.id);
-
-  // todo fix this
-  function optimizedSetGreenZone(newZone?: GreenZone): void {
-    if (newZone?.hoveringNodeID !== greenZone?.hoveringNodeID || newZone?.position !== greenZone?.position) {
-      setGreenZone(newZone);
-    }
-  }
-
-  const handleDragOver = debounce((e) => {
-    // TODO bug
-    // if hovering node is draggingNode's parent
-    // dragging node will be move to first
-    const position = calcHoverPosition({
-      cursorX: e.clientX,
-      cursorY: e.clientY,
-      hoveringRect: contourNode.raw,
-      supportInner: !!getIsNodeSupportCache(currentArteryNodeRef.current as NodeWithoutChild),
-    });
-
-    if (positionRef.current !== position) {
-      positionRef.current = position;
-      optimizedSetGreenZone({ position, hoveringNodeID: contourNode.id, mostInnerNode: contourNode });
-    }
-
-    return false;
-    // todo optimize this
-  }, 200);
-
   function handleClick(): void {
     const keyPath = byArbitrary(immutableNode, contourNode.id);
     if (!keyPath) {
@@ -193,16 +159,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
             return;
           }
 
-          const keyPath = keyPathById(immutableNode, contourNode.id);
-          if (!keyPath) {
-            return;
-          }
-          // @ts-ignore
-          const arteryNode = immutableNode.getIn(keyPath)?.toJS();
-          currentArteryNodeRef.current = arteryNode;
-
           preventDefault(e);
-
           return false;
         }}
         onDrop={(e) => {

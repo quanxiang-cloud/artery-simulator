@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { HTMLNode, ReactComponentNode } from '@one-for-all/artery-renderer';
 
-import { cacheIsNodeSupportChildren, getIsNodeSupportCache } from '../../cache';
+import { cacheIsNodeSupportChildren, getIsNodeSupportCache } from '../../utils';
 import { ArteryCtx } from '../../contexts';
 
 export function useSupportChildrenCheck(node: ReactComponentNode | HTMLNode): void {

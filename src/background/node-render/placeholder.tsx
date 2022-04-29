@@ -1,6 +1,6 @@
 import type { HTMLNode, ReactComponentNode } from '@one-for-all/artery-renderer';
 import React, { useContext, useEffect, useState } from 'react';
-import { cacheIsNodeSupportChildren, getIsNodeSupportCache } from '../../cache';
+import { cacheIsNodeSupportChildren, getIsNodeSupportCache } from '../../utils';
 import { ArteryCtx } from '../../contexts';
 import { NodeWithoutChild } from '../../types';
 
