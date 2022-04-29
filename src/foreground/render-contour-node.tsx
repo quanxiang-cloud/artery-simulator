@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import cs from 'classnames';
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 import { Artery, Node } from '@one-for-all/artery';
 import { byArbitrary, keyPathById, parentIdsSeq } from '@one-for-all/artery-utils';
 
@@ -23,6 +23,15 @@ interface Props {
   contourNode: ContourNode;
 }
 
+function shouldHandleDnd(currentID: string, draggingNodeID: string, root: Immutable.Collection<unknown, unknown>): boolean {
+  const parentIDs = parentIdsSeq(root, currentID);
+  if (!parentIDs) {
+    return false;
+  }
+
+  return parentIDs.keyOf(draggingNodeID) !== undefined ? false : true;
+}
+
 function RenderContourNode({ contourNode }: Props): JSX.Element {
   const [hoveringParentID] = useRecoilState(hoveringParentIDState);
   const { onChange, rootNodeID, artery, activeNode, setActiveNode } = useContext(ArteryCtx);
@@ -42,7 +51,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
     }
   }
 
-  const handleDragOver = throttle((e) => {
+  const handleDragOver = debounce((e) => {
     if (draggingNodeID === contourNode.id) {
       return;
     }
@@ -136,18 +145,16 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
       }}
       onDrag={preventDefault}
       onDragOver={(e) => {
+        if (!shouldHandleDnd(contourNode.id, draggingNodeID, immutableNode)) {
+          return;
+        }
+
         preventDefault(e);
         handleDragOver(e);
         return false;
       }}
       onDragEnter={(e) => {
-        const parentIDs = parentIdsSeq(immutableNode, contourNode.id);
-        if (!parentIDs) {
-          return;
-        }
-
-        const K = parentIDs.keyOf(draggingNodeID);
-        if (!K) {
+        if (!shouldHandleDnd(contourNode.id, draggingNodeID, immutableNode)) {
           return;
         }
 
