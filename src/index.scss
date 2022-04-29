@@ -38,14 +38,12 @@
   }
 }
 
-.green-zone-indicator {
+.contour-green-zone {
   position: absolute;
   top: 0;
   will-change: width, height, transform;
 
-  &:not(.green-zone-indicator--root) {
-    background-color: #0080005c;
-  }
+  outline: 1px dashed #f85900;
 }
 
 // TODO Support all position
@@ -58,20 +56,27 @@
 // inner-right
 // inner-bottom
 // inner-left
-$indictorColor: green;
+// $indictorColor: green;
 
-.green-zone-indicator--left {
-  box-shadow: -8px 0 0 0px $indictorColor;
+.green-zone-position-indicator {
+  position: absolute;
+  will-change: width, height, transform;
+  background-color: #0080005c;
+  outline: 1px dashed #008000;
 }
 
-.green-zone-indicator--right {
-  box-shadow: 8px 0 0 0px $indictorColor;
-}
+// .contour-green-zone--left {
+//   box-shadow: -8px 0 0 0px $indictorColor;
+// }
 
-.green-zone-indicator--inner-left {
-  box-shadow: inset 8px 0 0 0px $indictorColor;
-}
+// .contour-green-zone--right {
+//   box-shadow: 8px 0 0 0px $indictorColor;
+// }
 
-.green-zone-indicator--inner-right {
-  box-shadow: inset -8px 0 0 0px $indictorColor;
-}
+// .contour-green-zone--inner-left {
+//   box-shadow: inset 8px 0 0 0px coral;
+// }
+
+// .contour-green-zone--inner-right {
+//   box-shadow: inset -8px 0 0 0px coral;
+// }

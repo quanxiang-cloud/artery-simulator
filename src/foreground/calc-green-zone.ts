@@ -45,6 +45,14 @@ export function calcHoverPosition({ cursorX, hoveringRect, supportInner }: GetPo
     return leftDistance < rightDistance ? 'left' : 'right';
   }
 
+  if (leftDistance <= 9) {
+    return 'left';
+  }
+
+  if (rightDistance <= 9) {
+    return 'right';
+  }
+
   const oneThirdWidth = hoveringRect.width / 3;
   if (leftDistance < oneThirdWidth) {
     return 'inner-left';

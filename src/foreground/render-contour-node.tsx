@@ -164,6 +164,7 @@ function RenderContourNode({ contourNode }: Props): JSX.Element {
         'contour-node--root': rootNodeID === contourNode.id,
         'contour-node--active': activeNode?.id === contourNode.id,
         'contour-node--hover-as-parent': hoveringParentID === contourNode.id,
+        'contour-node--dragging': draggingNodeID === contourNode.id,
       })}
     />
   );
